@@ -1,0 +1,18 @@
+[submodule "libs/fmt"]
+	path = libs/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "libs/range-v3"]
+	path = libs/range-v3
+	url = https://github.com/ericniebler/range-v3.git
+[submodule "libs/catch"]
+	path = libs/catch
+	url = https://github.com/philsquared/Catch.git
+[submodule "libs/cpr"]
+	path = libs/cpr
+	url = https://github.com/whoshuu/cpr.git
+[submodule "libs/json"]
+	path = libs/json
+	url = https://github.com/nlohmann/json.git
+[submodule "libs/boost"]
+	path = libs/boost
+	url = https://github.com/boostorg/boost.git
