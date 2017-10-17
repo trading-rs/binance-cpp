@@ -16,3 +16,6 @@
 [submodule "libs/boost"]
 	path = libs/boost
 	url = https://github.com/boostorg/boost.git
+[submodule "libs/sha"]
+	path = libs/sha
+	url = https://github.com/okdshin/PicoSHA2.git
