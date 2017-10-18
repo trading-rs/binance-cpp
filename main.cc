@@ -30,4 +30,10 @@ int main(int argc, char** argv) {
   print_result(endpoint->all_orders("ETHBTC"));
   print_result(endpoint->my_account());
   print_result(endpoint->my_trades("ETHBTC"));
+  auto jr = endpoint->start_user_data_stream();
+  if (jr != nullptr) {
+    cout << "listenKey: " << jr["listenKey"] << endl;
+    print_result(endpoint->keepalive_user_data_stream(jr["listenKey"]));
+    print_result(endpoint->close_user_data_stream(jr["listenKey"]));
+  }
 }

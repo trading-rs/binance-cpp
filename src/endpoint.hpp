@@ -77,6 +77,9 @@ namespace endpoint {
      */
     auto my_trades(string symbol, const Map &options) -> json;
     auto my_trades(string symbol) -> json;
+    auto start_user_data_stream() -> json;
+    auto keepalive_user_data_stream(string listen_key) -> json;
+    auto close_user_data_stream(string listen_key) -> json;
   };
 
   Endpoint::Endpoint(string key, string secret) {
@@ -230,5 +233,17 @@ namespace endpoint {
 
   auto Endpoint::my_trades(string symbol) -> json {
     return this->my_trades(symbol, Map({}));
+  }
+
+  auto Endpoint::start_user_data_stream() -> json {
+    return this->api->user_post("/api/v1/userDataStream", Map({}));
+  }
+
+  auto Endpoint::keepalive_user_data_stream(string listen_key) -> json {
+    return this->api->user_put("/api/v1/userDataStream", Map({{ "listenKey", listen_key }}));
+  }
+
+  auto Endpoint::close_user_data_stream(string listen_key) -> json {
+    return this->api->user_delete("/api/v1/userDataStream", Map({{ "listenKey", listen_key }}));
   }
 }
