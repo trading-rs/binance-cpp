@@ -14,7 +14,14 @@ auto pre_check() {
     throw std::runtime_error("Please setup binance APIKEY and APISECRET!");
 }
 
+auto print_result(const json &result) -> void {
+  if (result != nullptr)
+    cout << result.dump(2) << endl;
+}
+
 int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
+  print_result(endpoint->ping());
+  print_result(endpoint->time());
 }

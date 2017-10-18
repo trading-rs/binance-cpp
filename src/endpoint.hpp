@@ -12,9 +12,19 @@ namespace endpoint {
 
   public:
     Endpoint(string key, string secret);
+    auto ping() -> json;
+    auto time() -> json;
   };
 
   Endpoint::Endpoint(string key, string secret) {
     this->api = make_shared<Api>(key, secret);
+  }
+
+  auto Endpoint::ping() -> json {
+    return this->api->public_get("/api/v1/ping");
+  }
+
+  auto Endpoint::time() -> json {
+    return this->api->public_get("/api/v1/time");
   }
 }

@@ -79,7 +79,7 @@ namespace api {
   };
 
   Api::Api(string key, string secret): api_key(key), api_secret(secret) {
-    this->domain = "https://www.binance.com/api";
+    this->domain = "https://www.binance.com";
     this->public_header = {
       { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
       { "accept", "application/json" },
@@ -129,7 +129,7 @@ namespace api {
 
   auto Api::request(REQUEST_TYPE method, const string &url, const Header &header) -> json {
     Session session;
-    session.SetUrl(Url{ url });
+    session.SetUrl(Url{ format("{0}{1}", this->domain, url) });
     session.SetHeader(header);
     session.SetVerifySsl(VerifySsl{ false });
 
