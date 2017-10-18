@@ -1,0 +1,20 @@
+language: cpp
+compiler: gcc
+dist: trusty
+before_install:
+- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+- sudo apt-get update -qq
+install:
+- sudo apt-get install -qq g++-5
+- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
+script:
+- g++ --version
+- c++ --version
+- git submodule update --init --recursive
+- "./build.sh"
+env:
+  global:
+  - BUILD_BINANCE_EXEC=ON
+  - BUILD_BINANCE_TESTS=ON
+  - secure: Gw0VWAxsbRBDdeksKy5aFg6sPI/qJX+4wZwztJ1q/rPcxtI2rmsqKMl0iRSkShNWBKypcu4Hr9r3oM9dSs2OWurbqgsDwgarNS+Gv8d5wXSymVIF6tzD4B0mAsCA5rPWozL5sGWdls2zGErS0SBpAHW+lflsrdKmvH42HaGS0eWSajOrZBlFydwRAKPFcsjMZ9zml2DBZKXC5q2o1kEmWjB5Wtd25ylm256usLA/c/sSGzDY6QaibFdlqufMYmZN3vZlsUFNIGMFf88hDfGlFGe2g7RIZVP7EtcynwYe5XPALnASlGnSp6vJVQXuFGdFSf7XT6U+loJB8dXMMYMPxQpQ0ydRhg5+Mi7A0XGjq0/fPVD+LyZdftr/kVh+cMBo8fl9PgEMtMPj1vqDE3XVip9PIouYout4MYkm2vWVed8A8kKPxAbLTKmkkvng1lTfZSnSfX3TLR04vIi/DwLJcMjdS5JclUgMfJ9y4hKuMnA2RGJr038a1aLSHFU2i4dobfzDI4IJD2kdi+T8yNvezYsG5Fj7Gr6YfDOvGFZgp72wPLPvilcwU+xUtbdSl8iLJ25F8nd37bPvkNco8H2YMuWglrAp1aWlXOHSGmFiKwZ3o3CVfiZkc/fCU3prd3687lIBDPup+ThndBnFRf+luLI5Xhih0VGTfB3e/09LD5o=
+  - secure: L97Y9hwj3F7haYunx60Gvr+LR2DxfEluvqtL07Z8gCx+b8M5PS1OZsbxa2BPZ2jA4wOXZ7dHqWqg5cNV1JgYNAL7FyG06DI+NdpxgzjZVBl9u9oS+U1I1XFjWRMBLzW0zUO1coFano2yj+eanp2gKIgIBGgCLLJjXH0RbUgdSTUa23ORnzID26LEfAbCGesGlmwA84PBfwcnXjKKg9bMcpAkGH1owTt91teVgqy4TN/F3QECPsnhB2dGaXOfIxbIDire061PGU/7GTN3WWLPsNidTeUXp3vcqXf3UDzmI+dudFtdDLPEMkeFp+bcdpakwFZ+Xaj8qnQdyY6FNtT+AKXd3BvQvOdegh87vRZ5K5z2KjCocY4wng1UaKHBUFamaDjZPBv5j4zBUZSsbMjeyrIMDj/+r266vP0RyyaIXxAm5hdDVkvO0g+Yvl4hFf9HgWzhB3nui6Y/i5Kd7h1L+Hs7KLNB4y8j1THwKYljmZTOYPV6mdhkuOjaId8kV0lMcc8HYAj54yOCbVISQZkhhqx4sF2fUHZm7rfEfzF0DlSHRstvuM7Tv+LcUihesOpUvDMraMW8ayxXRygL+bxX4Baf4rw2P7sdzoFdYF9kEbYCfsZPKDJqmqrPLlWFfA5+yp3REqdSlZOBbKlYxw5U2RoiNZ5Xd0j3Qz/7a7qlmIo=
