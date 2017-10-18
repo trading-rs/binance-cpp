@@ -24,4 +24,6 @@ int main(int argc, char** argv) {
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
   print_result(endpoint->ping());
   print_result(endpoint->time());
+  print_result(endpoint->depth("LTCBTC"));
+  print_result(endpoint->depth("LTCBTC", DEPTH_LIMIT::FIVE));
 }
