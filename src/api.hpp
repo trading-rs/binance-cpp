@@ -10,6 +10,9 @@ using json = nlohmann::json;
 #include <iostream>
 using namespace std;
 
+#include <chrono>
+using namespace std::chrono;
+
 #include <cpr/cpr.h>
 using namespace cpr;
 
@@ -129,9 +132,12 @@ namespace api {
   }
 
   auto Api::add_signature(const Map &params) -> Map {
-    auto params_str = flatten_params(params);
-    auto signature = hmac<sha256>::calc_hex(params_str, this->api_secret);
+    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
     Map new_params = params;
+    new_params["timestamp"] = to_string(ms.count());
+    new_params["recvWindow"] = "6000";
+    auto params_str = flatten_params(new_params);
+    auto signature = hmac<sha256>::calc_hex(params_str, this->api_secret);
     new_params["signature"] = signature;
     return new_params;
   }

@@ -14,9 +14,6 @@ using namespace fmt;
 #include <memory>
 using namespace std;
 
-#include <chrono>
-using namespace std::chrono;
-
 namespace endpoint {
   class Endpoint {
   private:
@@ -62,6 +59,16 @@ namespace endpoint {
     auto sell_limit(string symbol, string quantity, string price) -> json;
     auto sell_market(string symbol, string quantity, const Map &options) -> json;
     auto sell_market(string symbol, string quantity) -> json;
+    auto order_status(string symbol, string order_id) -> json;
+    auto cancle_order(string symbol, string order_id) -> json;
+    auto open_orders(string symbol) -> json;
+    /**
+       @options:
+       orderId: If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned
+       limit: Default 500; max 500
+     */
+    auto all_orders(string symbol, const Map &options) -> json;
+    auto all_orders(string symbol) -> json;
   };
 
   Endpoint::Endpoint(string key, string secret) {
@@ -120,14 +127,11 @@ namespace endpoint {
   }
 
   auto Endpoint::order(string side, string type, string symbol, string quantity, const Map &options) -> json {
-    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
     Map params = options;
     params["side"] = side;
     params["symbol"] = symbol;
     params["quantity"] = quantity;
     params["type"] = type;
-    params["timestamp"] = to_string(ms.count());
-    params["recvWindow"] = "60000";
     if (type == "LIMIT") {
       params["timeInForce"] = "GTC";
     }
@@ -161,6 +165,7 @@ namespace endpoint {
     params["price"] = price;
     return this->order("SELL", "LIMIT", symbol, quantity, params);
   }
+
   auto Endpoint::sell_limit(string symbol, string quantity, string price) -> json {
     return this->sell_limit(symbol, quantity, price, Map({}));
   }
@@ -168,7 +173,40 @@ namespace endpoint {
   auto Endpoint::sell_market(string symbol, string quantity, const Map &options) -> json {
     return this->order("SELL", "MARKET", symbol, quantity, options);
   }
+
   auto Endpoint::sell_market(string symbol, string quantity) -> json {
     return this->sell_market(symbol, quantity);
+  }
+
+  auto Endpoint::order_status(string symbol, string order_id) -> json {
+    const Map &params = {
+      { "symbol", symbol },
+      { "orderId", order_id }
+    };
+
+    return this->api->signed_get("/api/v3/order", params);
+  }
+
+  auto Endpoint::cancle_order(string symbol, string order_id) -> json {
+    const Map &params = {
+      { "symbol", symbol },
+      { "orderId", order_id }
+    };
+
+    return this->api->signed_delete("/api/v3/order", params);
+  }
+
+  auto Endpoint::open_orders(string symbol) -> json {
+    return this->api->signed_get("/api/v3/openOrders", Map({{ "symbol", symbol }}));
+  }
+
+  auto Endpoint::all_orders(string symbol, const Map &options) -> json {
+    Map params = options;
+    params["symbol"] = symbol;
+    return this->api->signed_get("/api/v3/allOrders", params);
+  }
+
+  auto Endpoint::all_orders(string symbol) -> json {
+    return this->all_orders(symbol, Map({}));
   }
 }

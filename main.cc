@@ -24,4 +24,8 @@ int main(int argc, char** argv) {
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
   print_result(endpoint->buy_limit("ETHBTC", "1", "0.069"));
   print_result(endpoint->buy_market("ETHBTC", "1"));
+  print_result(endpoint->order_status("ETHBTC", "1"));
+  print_result(endpoint->cancle_order("ETHBTC", "1"));
+  print_result(endpoint->open_orders("ETHBTC"));
+  print_result(endpoint->all_orders("ETHBTC"));
 }
