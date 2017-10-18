@@ -1,5 +1,5 @@
-#include "src/api.hpp"
-using namespace api;
+#include "src/endpoint.hpp"
+using namespace endpoint;
 
 #include <memory>
 #include <utility>
@@ -16,5 +16,5 @@ auto pre_check() {
 
 int main(int argc, char** argv) {
   pre_check();
-  auto api = make_shared<Api>(api_key, api_secret);
+  auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 }
