@@ -22,15 +22,4 @@ auto print_result(const json &result) -> void {
 int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
-  print_result(endpoint->ping());
-  print_result(endpoint->time());
-  print_result(endpoint->depth("LTCBTC"));
-  print_result(endpoint->depth("LTCBTC", Map({{ "limit", "5" }})));
-  print_result(endpoint->agg_trades("LTCBTC"));
-  print_result(endpoint->agg_trades("LTCBTC", Map({{ "limit", "5" }})));
-  print_result(endpoint->klines("LTCBTC","5m"));
-  print_result(endpoint->klines("LTCBTC", "5m", Map({{ "limit", "5" }})));
-  print_result(endpoint->ticker_24hr("LTCBTC"));
-  print_result(endpoint->ticker_all_prices());
-  print_result(endpoint->ticker_all_bool_tickers());
 }
