@@ -14,6 +14,9 @@ using namespace fmt;
 #include <memory>
 using namespace std;
 
+#include <chrono>
+using namespace std::chrono;
+
 namespace endpoint {
   class Endpoint {
   private:
@@ -49,6 +52,16 @@ namespace endpoint {
     auto ticker_24hr(string symbol) -> json;
     auto ticker_all_prices() -> json;
     auto ticker_all_bool_tickers() -> json;
+    auto order(string side, string type, string symbol, string quantity, const Map &options) -> json;
+    auto order(string side, string type, string symbol, string quantity) -> json;
+    auto buy_limit(string symbol, string quantity, string price, const Map &options) -> json;
+    auto buy_limit(string symbol, string quantity, string price) -> json;
+    auto buy_market(string symbol, string quantity,const Map &options) -> json;
+    auto buy_market(string symbol, string quantity) -> json;
+    auto sell_limit(string symbol, string quantity, string price, const Map &options) -> json;
+    auto sell_limit(string symbol, string quantity, string price) -> json;
+    auto sell_market(string symbol, string quantity, const Map &options) -> json;
+    auto sell_market(string symbol, string quantity) -> json;
   };
 
   Endpoint::Endpoint(string key, string secret) {
@@ -104,5 +117,58 @@ namespace endpoint {
 
   auto Endpoint::ticker_all_bool_tickers() -> json {
     return this->api->public_get("/api/v1/ticker/allBookTickers");
+  }
+
+  auto Endpoint::order(string side, string type, string symbol, string quantity, const Map &options) -> json {
+    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+    Map params = options;
+    params["side"] = side;
+    params["symbol"] = symbol;
+    params["quantity"] = quantity;
+    params["type"] = type;
+    params["timestamp"] = to_string(ms.count());
+    params["recvWindow"] = "60000";
+    if (type == "LIMIT") {
+      params["timeInForce"] = "GTC";
+    }
+    return this->api->signed_post("/api/v3/order", params);
+  }
+
+  auto Endpoint::order(string side, string type, string symbol, string quantity) -> json {
+    return this->order(side, type, symbol, quantity, Map({}));
+  }
+
+  auto Endpoint::buy_limit(string symbol, string quantity, string price, const Map &options) -> json {
+    Map params = options;
+    params["price"] = price;
+    return this->order("BUY", "LIMIT", symbol, quantity, params);
+  }
+
+  auto Endpoint::buy_limit(string symbol, string quantity, string price) -> json {
+    return this->buy_limit(symbol, quantity, price, Map({}));
+  }
+
+  auto Endpoint::buy_market(string symbol, string quantity, const Map &options) -> json {
+    return this->order("BUY", "MARKET", symbol, quantity, options);
+  }
+
+  auto Endpoint::buy_market(string symbol, string quantity) -> json {
+    return this->buy_market(symbol, quantity, Map({}));
+  }
+
+  auto Endpoint::sell_limit(string symbol, string quantity, string price, const Map &options) -> json {
+    Map params = options;
+    params["price"] = price;
+    return this->order("SELL", "LIMIT", symbol, quantity, params);
+  }
+  auto Endpoint::sell_limit(string symbol, string quantity, string price) -> json {
+    return this->sell_limit(symbol, quantity, price, Map({}));
+  }
+
+  auto Endpoint::sell_market(string symbol, string quantity, const Map &options) -> json {
+    return this->order("SELL", "MARKET", symbol, quantity, options);
+  }
+  auto Endpoint::sell_market(string symbol, string quantity) -> json {
+    return this->sell_market(symbol, quantity);
   }
 }

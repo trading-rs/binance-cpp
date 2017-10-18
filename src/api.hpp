@@ -4,11 +4,10 @@
 using json = nlohmann::json;
 
 #include <string>
-#include <iostream>
 #include <memory>
 #include <vector>
 #include <map>
-#include <initializer_list>
+#include <iostream>
 using namespace std;
 
 #include <cpr/cpr.h>
@@ -51,8 +50,9 @@ namespace api {
     auto append_params(const string &url, const Map &params) -> string;
     auto append_params(const string &url, const string &params_str) -> string;
     auto response_tweak(Response response) -> json;
-    auto request(REQUEST_TYPE method, const string &url, const Header &header) -> json;
     auto add_signature(const Map &params) -> Map;
+    auto params_to_payload(const Map &params) -> Payload;
+    auto request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json;
     auto public_get(const string &url, const Map &params) -> json;
     auto public_get(const string &url) -> json;
     auto user_get(const string &url, const  Map &params) -> json;
@@ -136,7 +136,15 @@ namespace api {
     return new_params;
   }
 
-  auto Api::request(REQUEST_TYPE method, const string &url, const Header &header) -> json {
+  auto Api::params_to_payload(const Map &params) -> Payload {
+    auto payload = Payload(initializer_list<Pair>({}));
+    std::for_each(params.cbegin(), params.cend(), [&](const pair<string, string> &pair) {
+        payload.AddPair(Pair(pair.first, pair.second));
+      });
+    return payload;
+  }
+
+  auto Api::request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json {
     Session session;
     session.SetUrl(Url{ format("{0}{1}", this->domain, url) });
     session.SetHeader(header);
@@ -149,14 +157,17 @@ namespace api {
       break;
     }
     case REQUEST_TYPE::POST: {
+      session.SetPayload(params_to_payload(params));
       response = session.Post();
       break;
     }
     case REQUEST_TYPE::PUT: {
+      session.SetPayload(params_to_payload(params));
       response = session.Put();
       break;
     }
     case REQUEST_TYPE::DELETE: {
+      session.SetPayload(params_to_payload(params));
       response = session.Delete();
       break;
     }
@@ -168,7 +179,7 @@ namespace api {
   }
 
   auto Api::public_get(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::GET, append_params(url, params), public_header);
+    return request(REQUEST_TYPE::GET, append_params(url, params), public_header, Map({}));
   }
 
   auto Api::public_get(const string &url) -> json {
@@ -176,7 +187,7 @@ namespace api {
   }
 
   auto Api::user_get(const string &url, const  Map &params) -> json {
-    return request(REQUEST_TYPE::GET, append_params(url, params), user_header);
+    return request(REQUEST_TYPE::GET, append_params(url, params), user_header, Map({}));
   }
 
   auto Api::user_get(const string &url) -> json {
@@ -184,7 +195,7 @@ namespace api {
   }
 
   auto Api::signed_get(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::GET, append_params(url, add_signature(params)), user_header);
+    return request(REQUEST_TYPE::GET, append_params(url, add_signature(params)), user_header, Map({}));
   }
 
   auto Api::signed_get(const string &url) -> json {
@@ -192,7 +203,7 @@ namespace api {
   }
 
   auto Api::public_post(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::POST, append_params(url, params), public_header);
+    return request(REQUEST_TYPE::POST, url, public_header, params);
   }
 
   auto Api::public_post(const string &url) -> json {
@@ -200,7 +211,7 @@ namespace api {
   }
 
   auto Api::user_post(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::POST, append_params(url, params), user_header);
+    return request(REQUEST_TYPE::POST, url, user_header, params);
   }
 
   auto Api::user_post(const string &url) -> json {
@@ -208,15 +219,15 @@ namespace api {
   }
 
   auto Api::signed_post(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::POST, append_params(url, add_signature(params)), user_header);
+    return request(REQUEST_TYPE::POST, url, user_header, add_signature(params));
   }
 
   auto Api::signed_post(const string &url) -> json {
-    return request(REQUEST_TYPE::POST, url, user_header);
+    return signed_post(url, Map({}));
   }
 
   auto Api::public_put(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::PUT, append_params(url, params), public_header);
+    return request(REQUEST_TYPE::PUT, url, public_header, params);
   }
 
   auto Api::public_put(const string &url) -> json {
@@ -224,7 +235,7 @@ namespace api {
   }
 
   auto Api::user_put(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::PUT, append_params(url, params), user_header);
+    return request(REQUEST_TYPE::PUT, url, user_header, params);
   }
 
   auto Api::user_put(const string &url) -> json {
@@ -232,7 +243,7 @@ namespace api {
   }
 
   auto Api::signed_put(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::PUT, append_params(url, add_signature(params)), user_header);
+    return request(REQUEST_TYPE::PUT, url, user_header, add_signature(params));
   }
 
   auto Api::signed_put(const string &url) -> json {
@@ -240,7 +251,7 @@ namespace api {
   }
 
   auto Api::public_delete(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::DELETE, append_params(url, params), public_header);
+    return request(REQUEST_TYPE::DELETE, url, public_header, params);
   }
 
   auto Api::public_delete(const string &url) -> json {
@@ -248,7 +259,7 @@ namespace api {
   }
 
   auto Api::user_delete(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::DELETE, append_params(url, params), user_header);
+    return request(REQUEST_TYPE::DELETE, url, user_header, params);
   }
 
   auto Api::user_delete(const string &url) -> json {
@@ -256,7 +267,7 @@ namespace api {
   }
 
   auto Api::signed_delete(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::DELETE, append_params(url, add_signature(params)), user_header);
+    return request(REQUEST_TYPE::DELETE, url, user_header, add_signature(params));
   }
 
   auto Api::signed_delete(const string &url) -> json {
