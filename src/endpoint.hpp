@@ -12,41 +12,9 @@ using namespace fmt;
 
 #include <string>
 #include <memory>
-#include <iostream>
 using namespace std;
 
 namespace endpoint {
-  enum class DEPTH_LIMIT: size_t {
-    FIVE,
-    TEN,
-    TWENTY,
-    FIFTY,
-    ONE_HUNDRED,
-    TWO_HUNDRED,
-    FIVE_HUNDRED
-  };
-
-  auto depth_limit_str(DEPTH_LIMIT limit) -> string {
-    switch (limit) {
-    case DEPTH_LIMIT::FIVE:
-      return "5";
-    case DEPTH_LIMIT::TEN:
-      return "10";
-    case DEPTH_LIMIT::TWENTY:
-      return "20";
-    case DEPTH_LIMIT::FIFTY:
-      return "50";
-    case DEPTH_LIMIT::ONE_HUNDRED:
-      return "100";
-    case DEPTH_LIMIT::TWO_HUNDRED:
-      return "200";
-    case DEPTH_LIMIT::FIVE_HUNDRED:
-      return "500";
-    default:
-      throw std::runtime_error("invalid depth limit");
-    }
-  }
-
   class Endpoint {
   private:
     shared_ptr<Api> api;
@@ -55,8 +23,32 @@ namespace endpoint {
     Endpoint(string key, string secret);
     auto ping() -> json;
     auto time() -> json;
+    /**
+       @options:
+       'limit': legal range is { 50, 20, 100, 500, 5, 200, 10 }
+     */
+    auto depth(string symbol, const Map &options) -> json;
     auto depth(string symbol) -> json;
-    auto depth(string symbol, DEPTH_LIMIT limit) -> json;
+    /**
+       @options:
+       fromId
+       startTime
+       endTime
+       limit
+     */
+    auto agg_trades(string symbol, const Map &options) -> json;
+    auto agg_trades(string symbol) -> json;
+    /**
+       @options:
+       limit
+       startTime
+       endTime
+     */
+    auto klines(string symbol, string interval, const Map &options) -> json;
+    auto klines(string symbol, string interval) -> json;
+    auto ticker_24hr(string symbol) -> json;
+    auto ticker_all_prices() -> json;
+    auto ticker_all_bool_tickers() -> json;
   };
 
   Endpoint::Endpoint(string key, string secret) {
@@ -71,15 +63,46 @@ namespace endpoint {
     return this->api->public_get("/api/v1/time");
   }
 
-  auto Endpoint::depth(string symbol) -> json {
-    return this->api->public_get("/api/v1/depth", Map({{ "symbol", symbol }}));
+  auto Endpoint::depth(string symbol, const Map &options) -> json {
+    Map params = options;
+    params["symbol"] = symbol;
+    return this->api->public_get("/api/v1/depth", params);
   }
 
-  auto Endpoint::depth(string symbol, DEPTH_LIMIT limit) -> json {
-    const Map &params = {
-      { "symbol", symbol },
-      { "limit", depth_limit_str(limit) }
-    };
-    return this->api->public_get("/api/v1/depth", params);
+  auto Endpoint::depth(string symbol) -> json {
+    return this->depth(symbol, Map({}));
+  }
+
+  auto Endpoint::agg_trades(string symbol, const Map &options) -> json {
+    Map params = options;
+    params["symbol"] = symbol;
+    return this->api->public_get("/api/v1/aggTrades", params);
+  }
+
+  auto Endpoint::agg_trades(string symbol) -> json {
+    return this->agg_trades(symbol, Map({}));
+  }
+
+  auto Endpoint::klines(string symbol, string interval, const Map &options) -> json {
+    Map params = options;
+    params["symbol"] = symbol;
+    params["interval"] = interval;
+    return this->api->public_get("/api/v1/klines", params);
+  }
+
+  auto Endpoint::klines(string symbol, string interval) -> json {
+    return this->klines(symbol, interval, Map({}));
+  }
+
+  auto Endpoint::ticker_24hr(string symbol) -> json {
+    return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }}));
+  }
+
+  auto Endpoint::ticker_all_prices() -> json {
+    return this->api->public_get("/api/v1/ticker/allPrices");
+  }
+
+  auto Endpoint::ticker_all_bool_tickers() -> json {
+    return this->api->public_get("/api/v1/ticker/allBookTickers");
   }
 }
