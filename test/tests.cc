@@ -36,3 +36,18 @@ TEST_CASE("Test Binance market data endpoints") {
   REQUIRE(endpoint->ticker_all_prices() != nullptr);
   REQUIRE(endpoint->ticker_all_bool_tickers() != nullptr);
 }
+
+TEST_CASE("Test Binance account endpoints") {
+  REQUIRE(pre_check());
+  auto endpoint = make_shared<Endpoint>(api_key, api_secret);
+
+  REQUIRE(endpoint->open_orders("ETHBTC") != nullptr);
+  REQUIRE(endpoint->all_orders("ETHBTC") != nullptr);
+  REQUIRE(endpoint->my_account() != nullptr);
+  REQUIRE(endpoint->my_trades("ETHBTC") != nullptr);
+
+  auto jr = endpoint->start_user_data_stream();
+  REQUIRE(jr != nullptr);
+  REQUIRE(endpoint->keepalive_user_data_stream(jr["listenKey"]) != nullptr);
+  REQUIRE(endpoint->close_user_data_stream(jr["listenKey"]) != nullptr);
+}
