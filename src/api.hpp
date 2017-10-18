@@ -52,6 +52,7 @@ namespace api {
     auto append_params(const string &url, const string &params_str) -> string;
     auto response_tweak(Response response) -> json;
     auto request(REQUEST_TYPE method, const string &url, const Header &header) -> json;
+    auto add_signature(const Map &params) -> Map;
     auto public_get(const string &url, const Map &params) -> json;
     auto public_get(const string &url) -> json;
     auto user_get(const string &url, const  Map &params) -> json;
@@ -127,6 +128,14 @@ namespace api {
     }
   }
 
+  auto Api::add_signature(const Map &params) -> Map {
+    auto params_str = flatten_params(params);
+    auto signature = hmac<sha256>::calc_hex(params_str, this->api_secret);
+    Map new_params = params;
+    new_params["signature"] = signature;
+    return new_params;
+  }
+
   auto Api::request(REQUEST_TYPE method, const string &url, const Header &header) -> json {
     Session session;
     session.SetUrl(Url{ format("{0}{1}", this->domain, url) });
@@ -175,12 +184,7 @@ namespace api {
   }
 
   auto Api::signed_get(const string &url, const Map &params) -> json {
-    auto params_str = flatten_params(params);
-    auto signature = hmac<sha256>::calc_hex(params_str, api_secret);
-    Map new_params = params;
-    new_params["signature"] = signature;
-
-    return request(REQUEST_TYPE::GET, append_params(url, new_params), user_header);
+    return request(REQUEST_TYPE::GET, append_params(url, add_signature(params)), user_header);
   }
 
   auto Api::signed_get(const string &url) -> json {
@@ -204,12 +208,7 @@ namespace api {
   }
 
   auto Api::signed_post(const string &url, const Map &params) -> json {
-    auto params_str = flatten_params(params);
-    auto signature = hmac<sha256>::calc_hex(params_str, api_secret);
-    Map new_params = params;
-    new_params["signature"] = signature;
-
-    return request(REQUEST_TYPE::POST, append_params(url, new_params), user_header);
+    return request(REQUEST_TYPE::POST, append_params(url, add_signature(params)), user_header);
   }
 
   auto Api::signed_post(const string &url) -> json {
@@ -233,12 +232,7 @@ namespace api {
   }
 
   auto Api::signed_put(const string &url, const Map &params) -> json {
-    auto params_str = flatten_params(params);
-    auto signature = hmac<sha256>::calc_hex(params_str, api_secret);
-    Map new_params = params;
-    new_params["signature"] = signature;
-
-    return request(REQUEST_TYPE::PUT, append_params(url, new_params), user_header);
+    return request(REQUEST_TYPE::PUT, append_params(url, add_signature(params)), user_header);
   }
 
   auto Api::signed_put(const string &url) -> json {
@@ -262,12 +256,7 @@ namespace api {
   }
 
   auto Api::signed_delete(const string &url, const Map &params) -> json {
-    auto params_str = flatten_params(params);
-    auto signature = hmac<sha256>::calc_hex(params_str, api_secret);
-    Map new_params = params;
-    new_params["signature"] = signature;
-
-    return request(REQUEST_TYPE::DELETE, append_params(url, new_params), user_header);
+    return request(REQUEST_TYPE::DELETE, append_params(url, add_signature(params)), user_header);
   }
 
   auto Api::signed_delete(const string &url) -> json {
