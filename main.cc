@@ -28,4 +28,6 @@ int main(int argc, char** argv) {
   print_result(endpoint->cancle_order("ETHBTC", "1"));
   print_result(endpoint->open_orders("ETHBTC"));
   print_result(endpoint->all_orders("ETHBTC"));
+  print_result(endpoint->my_account());
+  print_result(endpoint->my_trades("ETHBTC"));
 }

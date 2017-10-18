@@ -69,6 +69,14 @@ namespace endpoint {
      */
     auto all_orders(string symbol, const Map &options) -> json;
     auto all_orders(string symbol) -> json;
+    auto my_account() -> json;
+    /**
+       @options:
+       fromId: TradeId to fetch from. Default gets most recent trades
+       limit: Default 500; max 500
+     */
+    auto my_trades(string symbol, const Map &options) -> json;
+    auto my_trades(string symbol) -> json;
   };
 
   Endpoint::Endpoint(string key, string secret) {
@@ -208,5 +216,19 @@ namespace endpoint {
 
   auto Endpoint::all_orders(string symbol) -> json {
     return this->all_orders(symbol, Map({}));
+  }
+
+  auto Endpoint::my_account() -> json {
+    return this->api->signed_get("/api/v3/account", Map({}));
+  }
+
+  auto Endpoint::my_trades(string symbol, const Map &options) -> json {
+    Map params = options;
+    params["symbol"] = symbol;
+    return this->api->signed_get("/api/v3/myTrades", params);
+  }
+
+  auto Endpoint::my_trades(string symbol) -> json {
+    return this->my_trades(symbol, Map({}));
   }
 }
