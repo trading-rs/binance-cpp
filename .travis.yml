@@ -11,6 +11,7 @@ script:
 - g++ --version
 - c++ --version
 - git submodule update --init --recursive
+- "./build-boost.sh"
 - "./build.sh"
 env:
   global:
