@@ -2,6 +2,7 @@
 set +e
 set -x
 
+rm -rf library_openssl
 dir=$(pwd)
 mkdir -p library_openssl/ssl
 cd ./libs/openssl
