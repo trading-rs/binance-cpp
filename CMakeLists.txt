@@ -66,13 +66,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14")
 
 if(BUILD_BINANCE_EXEC)
   add_executable(binance_exec main.cc)
-  target_link_libraries(binance_exec ${CPR_LIBRARIES})
-  add_executable(websocket_exec websocket_client_async_ssl.cpp)
-  target_link_libraries(websocket_exec
+  target_link_libraries(
+    binance_exec
     ${OPENSSL_LIBRARIES}/libssl.a
     ${OPENSSL_LIBRARIES}/libcrypto.a
     ${Boost_LIBRARIES}
-    )
+    ${CPR_LIBRARIES})
 endif()
 
 if(BUILD_BINANCE_TESTS)

@@ -1,6 +1,9 @@
 #include "src/endpoint.hpp"
 using namespace endpoint;
 
+#include "src/websocket_client.hpp"
+using namespace websocket_client;
+
 #include <memory>
 #include <utility>
 #include <iostream>
@@ -26,4 +29,8 @@ int main(int argc, char** argv) {
   print_result(endpoint->buy_market("ETHBTC", "1"));
   print_result(endpoint->order_status("ETHBTC", "1"));
   print_result(endpoint->cancle_order("ETHBTC", "1"));
+
+  subscribe("/ws/ethbtc@depth", [](json data) {
+      std::cout << data.dump(2) << std::endl;
+    });
 }
