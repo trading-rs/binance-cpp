@@ -21,6 +21,8 @@ set(OPENSSL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/library_openssl/include)
 set(OPENSSL_INCLUDE_DIR ${OPENSSL_INCLUDE_DIR} PARENT_SCOPE)
 set(OPENSSL_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/library_openssl/lib)
 set(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} PARENT_SCOPE)
+set(BEAST_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/beast/include)
+set(BEAST_INCLUDE_DIR ${BEAST_INCLUDE_DIR} PARENT_SCOPE)
 
 set(Boost_USE_STATIC_LIBS ON)
 find_package(
@@ -30,7 +32,6 @@ find_package(
   random
   thread
   REQUIRED)
-find_package(OpenSSL REQUIRED)
 link_directories(
   ${Boost_LIBRARY_DIR}
   ${OPENSSL_LIBRARIES})
@@ -55,6 +56,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
   ${CRYPTO_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
+  ${BEAST_INCLUDE_DIR}
   )
 
 cpr_option(BUILD_BINANCE_EXEC "Set to ON to build binance exec." ON)
@@ -65,6 +67,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14")
 if(BUILD_BINANCE_EXEC)
   add_executable(binance_exec main.cc)
   target_link_libraries(binance_exec ${CPR_LIBRARIES})
+  add_executable(websocket_exec websocket_client_async_ssl.cpp)
+  target_link_libraries(websocket_exec
+    ${OPENSSL_LIBRARIES}/libssl.a
+    ${OPENSSL_LIBRARIES}/libcrypto.a
+    ${Boost_LIBRARIES}
+    )
 endif()
 
 if(BUILD_BINANCE_TESTS)

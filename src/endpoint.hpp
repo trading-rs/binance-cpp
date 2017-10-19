@@ -186,7 +186,7 @@ namespace endpoint {
   }
 
   auto Endpoint::sell_market(string symbol, string quantity) -> json {
-    return this->sell_market(symbol, quantity);
+    return this->sell_market(symbol, quantity, Map({}));
   }
 
   auto Endpoint::order_status(string symbol, string order_id) -> json {
