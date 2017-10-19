@@ -34,3 +34,9 @@
 
 # CMake
 build/
+
+# Boost
+library_boost
+
+# OpenSSL
+library_openssl

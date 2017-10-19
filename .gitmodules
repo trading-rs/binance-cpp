@@ -19,3 +19,6 @@
 [submodule "libs/cryptlite"]
 	path = libs/cryptlite
 	url = https://github.com/lyokato/cpp-cryptlite.git
+[submodule "libs/openssl"]
+	path = libs/openssl
+	url = https://github.com/openssl/openssl.git
