@@ -24,6 +24,7 @@ set(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES} PARENT_SCOPE)
 set(BEAST_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/beast/include)
 set(BEAST_INCLUDE_DIR ${BEAST_INCLUDE_DIR} PARENT_SCOPE)
 
+SET(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 set(Boost_USE_STATIC_LIBS ON)
 find_package(
   Boost
@@ -72,6 +73,7 @@ if(BUILD_BINANCE_EXEC)
     ${OPENSSL_LIBRARIES}/libcrypto.a
     ${Boost_LIBRARIES}
     ${CPR_LIBRARIES}
+    "-ldl"
     )
 endif()
 
@@ -83,6 +85,7 @@ if(BUILD_BINANCE_TESTS)
     ${OPENSSL_LIBRARIES}/libcrypto.a
     ${Boost_LIBRARIES}
     ${CPR_LIBRARIES}
+    "-ldl"
     )
 
   enable_testing()
