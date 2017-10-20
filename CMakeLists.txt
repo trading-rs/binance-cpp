@@ -71,12 +71,19 @@ if(BUILD_BINANCE_EXEC)
     ${OPENSSL_LIBRARIES}/libssl.a
     ${OPENSSL_LIBRARIES}/libcrypto.a
     ${Boost_LIBRARIES}
-    ${CPR_LIBRARIES})
+    ${CPR_LIBRARIES}
+    )
 endif()
 
 if(BUILD_BINANCE_TESTS)
   add_executable(binance_tests test/tests.cc)
-  target_link_libraries(binance_tests ${CPR_LIBRARIES})
+  target_link_libraries(
+    binance_tests
+    ${OPENSSL_LIBRARIES}/libssl.a
+    ${OPENSSL_LIBRARIES}/libcrypto.a
+    ${Boost_LIBRARIES}
+    ${CPR_LIBRARIES}
+    )
 
   enable_testing()
   add_test(NAME Tests COMMAND binance_tests)

@@ -14,7 +14,7 @@ const char* api_secret = getenv("BINANCE_API_SECRET");
 
 auto pre_check() {
   if (!(api_key && api_secret))
-    throw std::runtime_error("Please setup binance APIKEY and APISECRET!");
+    throw runtime_error("Please setup binance APIKEY and APISECRET!");
 }
 
 auto print_result(const json &result) -> void {
@@ -30,7 +30,19 @@ int main(int argc, char** argv) {
   print_result(endpoint->order_status("ETHBTC", "1"));
   print_result(endpoint->cancle_order("ETHBTC", "1"));
 
-  subscribe("/ws/ethbtc@depth", [](json data) {
-      std::cout << data.dump(2) << std::endl;
+  endpoint->depth_websocket("ethbtc",  [](json data) {
+      cout << ">>>>>>>depth>>>>>>" << endl;
+      cout << data.dump(2) << endl;
+      cout << "<<<<<<depth<<<<<<" << endl;
+    });
+  endpoint->kline_websocket("ethbtc", "1m", [](json data) {
+      cout << ">>>>>>>kline>>>>>>" << endl;
+      cout << data.dump(2) << endl;
+      cout << "<<<<<<kline<<<<<<" << endl;
+    });
+  endpoint->trades_websocket("ethbtc", [](json data) {
+      cout << ">>>>>>>trades>>>>>>" << endl;
+      cout << data.dump(2) << endl;
+      cout << "<<<<<<trades<<<<<<" << endl;
     });
 }

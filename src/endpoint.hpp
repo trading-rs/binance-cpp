@@ -3,6 +3,9 @@
 #include "api.hpp"
 using namespace api;
 
+#include "websocket_client.hpp"
+using namespace websocket_client;
+
 #ifndef FORMAT_HEADER
 #define FORMAT_HEADER
 #include <fmt/format.h>
@@ -80,6 +83,9 @@ namespace endpoint {
     auto start_user_data_stream() -> json;
     auto keepalive_user_data_stream(string listen_key) -> json;
     auto close_user_data_stream(string listen_key) -> json;
+    auto depth_websocket(string symbol, async_callback callback) -> void;
+    auto kline_websocket(string symbol, string interval, async_callback callback) -> void;
+    auto trades_websocket(string symbol, async_callback callback) -> void;
   };
 
   Endpoint::Endpoint(string key, string secret) {
@@ -245,5 +251,17 @@ namespace endpoint {
 
   auto Endpoint::close_user_data_stream(string listen_key) -> json {
     return this->api->user_delete("/api/v1/userDataStream", Map({{ "listenKey", listen_key }}));
+  }
+
+  auto Endpoint::depth_websocket(string symbol, async_callback callback) -> void {
+    subscribe(format("/ws/{}@depth", symbol), callback);
+  }
+
+  auto Endpoint::kline_websocket(string symbol, string interval, async_callback callback) -> void {
+    subscribe(format("/ws/{0}@kline_{1}", symbol, interval), callback);
+  }
+
+  auto Endpoint::trades_websocket(string symbol, async_callback callback) -> void {
+    subscribe(format("/ws/{}@aggTrade", symbol), callback);
   }
 }
