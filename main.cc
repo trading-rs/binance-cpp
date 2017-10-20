@@ -30,18 +30,28 @@ int main(int argc, char** argv) {
   print_result(endpoint->order_status("ETHBTC", "1"));
   print_result(endpoint->cancle_order("ETHBTC", "1"));
 
+  auto jr = endpoint->start_user_data_stream();
+  if (jr != nullptr) {
+    auto listen_key = jr["listenKey"];
+    endpoint->user_data_websockets(listen_key, [](json data) {
+        cout << ">>>>>>user data>>>>>>" << endl;
+        cout << data.dump(2) << endl;
+        cout << "<<<<<<user data<<<<<<" << endl;
+      });
+  }
+
   endpoint->depth_websocket("ethbtc",  [](json data) {
-      cout << ">>>>>>>depth>>>>>>" << endl;
+      cout << ">>>>>>depth>>>>>>" << endl;
       cout << data.dump(2) << endl;
       cout << "<<<<<<depth<<<<<<" << endl;
     });
   endpoint->kline_websocket("ethbtc", "1m", [](json data) {
-      cout << ">>>>>>>kline>>>>>>" << endl;
+      cout << ">>>>>>kline>>>>>>" << endl;
       cout << data.dump(2) << endl;
       cout << "<<<<<<kline<<<<<<" << endl;
     });
   endpoint->trades_websocket("ethbtc", [](json data) {
-      cout << ">>>>>>>trades>>>>>>" << endl;
+      cout << ">>>>>>trades>>>>>>" << endl;
       cout << data.dump(2) << endl;
       cout << "<<<<<<trades<<<<<<" << endl;
     });

@@ -86,6 +86,7 @@ namespace endpoint {
     auto depth_websocket(string symbol, async_callback callback) -> void;
     auto kline_websocket(string symbol, string interval, async_callback callback) -> void;
     auto trades_websocket(string symbol, async_callback callback) -> void;
+    auto user_data_websockets(string listen_key, async_callback callback) -> void;
   };
 
   Endpoint::Endpoint(string key, string secret) {
@@ -263,5 +264,9 @@ namespace endpoint {
 
   auto Endpoint::trades_websocket(string symbol, async_callback callback) -> void {
     subscribe(format("/ws/{}@aggTrade", symbol), callback);
+  }
+
+  auto Endpoint::user_data_websockets(string listen_key, async_callback callback) -> void {
+    subscribe(format("/ws/{}", listen_key), callback);
   }
 }
