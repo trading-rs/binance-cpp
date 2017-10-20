@@ -1,7 +1,7 @@
-#include "src/endpoint.hpp"
+#include "../src/endpoint.hpp"
 using namespace endpoint;
 
-#include "src/websocket_client.hpp"
+#include "../src/websocket_client.hpp"
 using namespace websocket_client;
 
 #include <memory>
