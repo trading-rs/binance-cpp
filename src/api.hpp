@@ -29,6 +29,9 @@ using namespace fmt;
 #include <cryptlite/hmac.h>
 using namespace cryptlite;
 
+#include <spdlog/spdlog.h>
+using namespace spdlog;
+
 namespace api {
   typedef map<string, string> Map;
 

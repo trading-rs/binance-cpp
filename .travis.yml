@@ -11,9 +11,10 @@ script:
 - g++ --version
 - c++ --version
 - git submodule update --init --recursive
-- "./build-openssl.sh"
-- "./build-boost.sh"
-- "./build.sh"
+- "./script/build-openssl.sh"
+- "./script/build-boost.sh"
+- "./script/build.sh"
+- "./script/test.sh"
 env:
   global:
   - BUILD_BINANCE_EXEC=ON

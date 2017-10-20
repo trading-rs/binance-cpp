@@ -25,3 +25,6 @@
 [submodule "libs/beast"]
 	path = libs/beast
 	url = https://github.com/boostorg/beast.git
+[submodule "libs/spdlog"]
+	path = libs/spdlog
+	url = https://github.com/gabime/spdlog.git
