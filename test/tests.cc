@@ -2,7 +2,7 @@
 #include "catch.hpp"
 
 #include <binance/endpoint.hpp>
-using namespace endpoint;
+using namespace binance::endpoint;
 
 #include <memory>
 using namespace std;

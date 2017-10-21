@@ -1,8 +1,8 @@
 #include <binance/endpoint.hpp>
-using namespace endpoint;
+using namespace binance::endpoint;
 
 #include <binance/websocket_client.hpp>
-using namespace websocket_client;
+using namespace binance::websocket_client;
 
 #include <memory>
 #include <utility>

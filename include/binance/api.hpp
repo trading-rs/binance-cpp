@@ -32,261 +32,263 @@ using namespace cryptlite;
 #include <spdlog/spdlog.h>
 namespace spd = spdlog;
 
-namespace api {
-  typedef map<string, string> Map;
-  shared_ptr<spd::logger> logger = spd::stdout_color_mt("API");
+namespace binance {
+  namespace api {
+    typedef map<string, string> Map;
+    shared_ptr<spd::logger> logger = spd::stdout_color_mt("API");
 
-  enum class REQUEST_TYPE : size_t {
-    GET,
-    POST,
-    PUT,
-    DELETE
-  };
-
-  class Api {
-  private:
-    string api_key;
-    string api_secret;
-    string domain;
-    Header public_header;
-    Header user_header;
-
-  public:
-    explicit Api(const string &key, const string &secret);
-    auto flatten_params(const Map &params) -> string;
-    auto append_params(const string &url, const Map &params) -> string;
-    auto append_params(const string &url, const string &params_str) -> string;
-    auto response_tweak(const string &method, const string &url, const Response &response) -> json;
-    auto add_signature(const Map &params) -> Map;
-    auto params_to_payload(const Map &params) -> Payload;
-    auto request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json;
-    auto public_get(const string &url, const Map &params) -> json;
-    auto public_get(const string &url) -> json;
-    auto user_get(const string &url, const  Map &params) -> json;
-    auto user_get(const string &url) -> json;
-    auto signed_get(const string &url, const  Map &params) -> json;
-    auto signed_get(const string &url) -> json;
-    auto public_post(const string &url, const Map &params) -> json;
-    auto public_post(const string &url) -> json;
-    auto user_post(const string &url, const  Map &params) -> json;
-    auto user_post(const string &url) -> json;
-    auto signed_post(const string &url, const  Map &params) -> json;
-    auto signed_post(const string &url) -> json;
-    auto public_put(const string &url, const Map &params) -> json;
-    auto public_put(const string &url) -> json;
-    auto user_put(const string &url, const  Map &params) -> json;
-    auto user_put(const string &url) -> json;
-    auto signed_put(const string &url, const  Map &params) -> json;
-    auto signed_put(const string &url) -> json;
-    auto public_delete(const string &url, const Map &params) -> json;
-    auto public_delete(const string &url) -> json;
-    auto user_delete(const string &url, const  Map &params) -> json;
-    auto user_delete(const string &url) -> json;
-    auto signed_delete(const string &url, const  Map &params) -> json;
-    auto signed_delete(const string &url) -> json;
-  };
-
-  Api::Api(const string &key, const string &secret): api_key(key), api_secret(secret) {
-    this->domain = "https://www.binance.com";
-    this->public_header = {
-      { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
-      { "accept", "application/json" },
-      { "Content-Type", "application/x-www-form-urlencoded" }
+    enum class REQUEST_TYPE : size_t {
+      GET,
+      POST,
+      PUT,
+      DELETE
     };
-    this->user_header = {
-      { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
-      { "accept", "application/json" },
-      { "Content-Type", "application/x-www-form-urlencoded" },
-      { "X-MBX-APIKEY", format("{}", this->api_key) }
-    };
-  }
 
-  auto Api::flatten_params(const Map &params) -> string {
-    vector<string> params_vec = params
-      | ranges::view::transform([](const auto &pair) {
-          return format("{0}={1}", pair.first, pair.second);
+    class Api {
+    private:
+      string api_key;
+      string api_secret;
+      string domain;
+      Header public_header;
+      Header user_header;
+
+    public:
+      explicit Api(const string &key, const string &secret);
+      auto flatten_params(const Map &params) -> string;
+      auto append_params(const string &url, const Map &params) -> string;
+      auto append_params(const string &url, const string &params_str) -> string;
+      auto response_tweak(const string &method, const string &url, const Response &response) -> json;
+      auto add_signature(const Map &params) -> Map;
+      auto params_to_payload(const Map &params) -> Payload;
+      auto request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json;
+      auto public_get(const string &url, const Map &params) -> json;
+      auto public_get(const string &url) -> json;
+      auto user_get(const string &url, const  Map &params) -> json;
+      auto user_get(const string &url) -> json;
+      auto signed_get(const string &url, const  Map &params) -> json;
+      auto signed_get(const string &url) -> json;
+      auto public_post(const string &url, const Map &params) -> json;
+      auto public_post(const string &url) -> json;
+      auto user_post(const string &url, const  Map &params) -> json;
+      auto user_post(const string &url) -> json;
+      auto signed_post(const string &url, const  Map &params) -> json;
+      auto signed_post(const string &url) -> json;
+      auto public_put(const string &url, const Map &params) -> json;
+      auto public_put(const string &url) -> json;
+      auto user_put(const string &url, const  Map &params) -> json;
+      auto user_put(const string &url) -> json;
+      auto signed_put(const string &url, const  Map &params) -> json;
+      auto signed_put(const string &url) -> json;
+      auto public_delete(const string &url, const Map &params) -> json;
+      auto public_delete(const string &url) -> json;
+      auto user_delete(const string &url, const  Map &params) -> json;
+      auto user_delete(const string &url) -> json;
+      auto signed_delete(const string &url, const  Map &params) -> json;
+      auto signed_delete(const string &url) -> json;
+    };
+
+    Api::Api(const string &key, const string &secret): api_key(key), api_secret(secret) {
+      this->domain = "https://www.binance.com";
+      this->public_header = {
+        { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
+        { "accept", "application/json" },
+        { "Content-Type", "application/x-www-form-urlencoded" }
+      };
+      this->user_header = {
+        { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
+        { "accept", "application/json" },
+        { "Content-Type", "application/x-www-form-urlencoded" },
+        { "X-MBX-APIKEY", format("{}", this->api_key) }
+      };
+    }
+
+    auto Api::flatten_params(const Map &params) -> string {
+      vector<string> params_vec = params
+        | ranges::view::transform([](const auto &pair) {
+            return format("{0}={1}", pair.first, pair.second);
+          });
+      return params_vec | ranges::view::join('&');
+    }
+
+    auto Api::append_params(const string &url, const Map &params) -> string {
+      auto params_str = flatten_params(params);
+      if (params_str.empty()) {
+        return url;
+      } else {
+        return format("{0}?{1}", url, params_str);
+      }
+    }
+
+    auto Api::append_params(const string &url, const string &params_str) -> string {
+      if (params_str.empty()) {
+        return url;
+      } else {
+        return format("{0}?{1}", url, params_str);
+      }
+    }
+
+    auto Api::response_tweak(const string &method, const string &url, const Response &response) -> json {
+      if (response.status_code < 400) {
+        logger->info("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
+        return nlohmann::json::parse(response.text);
+      } else {
+        logger->error("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
+        return nullptr;
+      }
+    }
+
+    auto Api::add_signature(const Map &params) -> Map {
+      milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+      Map new_params = params;
+      new_params["timestamp"] = to_string(ms.count());
+      new_params["recvWindow"] = "6000";
+      auto params_str = flatten_params(new_params);
+      auto signature = hmac<sha256>::calc_hex(params_str, this->api_secret);
+      new_params["signature"] = signature;
+      return new_params;
+    }
+
+    auto Api::params_to_payload(const Map &params) -> Payload {
+      auto payload = Payload(initializer_list<Pair>({}));
+      std::for_each(params.cbegin(), params.cend(), [&](const pair<string, string> &pair) {
+          payload.AddPair(Pair(pair.first, pair.second));
         });
-    return params_vec | ranges::view::join('&');
-  }
-
-  auto Api::append_params(const string &url, const Map &params) -> string {
-    auto params_str = flatten_params(params);
-    if (params_str.empty()) {
-      return url;
-    } else {
-      return format("{0}?{1}", url, params_str);
-    }
-  }
-
-  auto Api::append_params(const string &url, const string &params_str) -> string {
-    if (params_str.empty()) {
-      return url;
-    } else {
-      return format("{0}?{1}", url, params_str);
-    }
-  }
-
-  auto Api::response_tweak(const string &method, const string &url, const Response &response) -> json {
-    if (response.status_code < 400) {
-      logger->info("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
-      return nlohmann::json::parse(response.text);
-    } else {
-      logger->error("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
-      return nullptr;
-    }
-  }
-
-  auto Api::add_signature(const Map &params) -> Map {
-    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-    Map new_params = params;
-    new_params["timestamp"] = to_string(ms.count());
-    new_params["recvWindow"] = "6000";
-    auto params_str = flatten_params(new_params);
-    auto signature = hmac<sha256>::calc_hex(params_str, this->api_secret);
-    new_params["signature"] = signature;
-    return new_params;
-  }
-
-  auto Api::params_to_payload(const Map &params) -> Payload {
-    auto payload = Payload(initializer_list<Pair>({}));
-    std::for_each(params.cbegin(), params.cend(), [&](const pair<string, string> &pair) {
-        payload.AddPair(Pair(pair.first, pair.second));
-      });
-    return payload;
-  }
-
-  auto Api::request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json {
-    Session session;
-    session.SetUrl(Url{ format("{0}{1}", this->domain, url) });
-    session.SetHeader(header);
-    session.SetVerifySsl(VerifySsl{ false });
-
-    Response response;
-    string method_str;
-    switch (method) {
-    case REQUEST_TYPE::GET: {
-      response = session.Get();
-      method_str = "GET";
-      break;
-    }
-    case REQUEST_TYPE::POST: {
-      session.SetPayload(params_to_payload(params));
-      response = session.Post();
-      method_str = "POST";
-      break;
-    }
-    case REQUEST_TYPE::PUT: {
-      session.SetPayload(params_to_payload(params));
-      response = session.Put();
-      method_str = "PUT";
-      break;
-    }
-    case REQUEST_TYPE::DELETE: {
-      session.SetPayload(params_to_payload(params));
-      response = session.Delete();
-      method_str = "DELETE";
-      break;
-    }
-    default:
-      break;
+      return payload;
     }
 
-    return response_tweak(method_str, url, response);
-  }
+    auto Api::request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json {
+      Session session;
+      session.SetUrl(Url{ format("{0}{1}", this->domain, url) });
+      session.SetHeader(header);
+      session.SetVerifySsl(VerifySsl{ false });
 
-  auto Api::public_get(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::GET, append_params(url, params), public_header, Map({}));
-  }
+      Response response;
+      string method_str;
+      switch (method) {
+      case REQUEST_TYPE::GET: {
+        response = session.Get();
+        method_str = "GET";
+        break;
+      }
+      case REQUEST_TYPE::POST: {
+        session.SetPayload(params_to_payload(params));
+        response = session.Post();
+        method_str = "POST";
+        break;
+      }
+      case REQUEST_TYPE::PUT: {
+        session.SetPayload(params_to_payload(params));
+        response = session.Put();
+        method_str = "PUT";
+        break;
+      }
+      case REQUEST_TYPE::DELETE: {
+        session.SetPayload(params_to_payload(params));
+        response = session.Delete();
+        method_str = "DELETE";
+        break;
+      }
+      default:
+        break;
+      }
 
-  auto Api::public_get(const string &url) -> json {
-    return public_get(url, Map({}));
-  }
+      return response_tweak(method_str, url, response);
+    }
 
-  auto Api::user_get(const string &url, const  Map &params) -> json {
-    return request(REQUEST_TYPE::GET, append_params(url, params), user_header, Map({}));
-  }
+    auto Api::public_get(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::GET, append_params(url, params), public_header, Map({}));
+    }
 
-  auto Api::user_get(const string &url) -> json {
-    return user_get(url, Map({}));
-  }
+    auto Api::public_get(const string &url) -> json {
+      return public_get(url, Map({}));
+    }
 
-  auto Api::signed_get(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::GET, append_params(url, add_signature(params)), user_header, Map({}));
-  }
+    auto Api::user_get(const string &url, const  Map &params) -> json {
+      return request(REQUEST_TYPE::GET, append_params(url, params), user_header, Map({}));
+    }
 
-  auto Api::signed_get(const string &url) -> json {
-    return signed_get(url, Map({}));
-  }
+    auto Api::user_get(const string &url) -> json {
+      return user_get(url, Map({}));
+    }
 
-  auto Api::public_post(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::POST, url, public_header, params);
-  }
+    auto Api::signed_get(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::GET, append_params(url, add_signature(params)), user_header, Map({}));
+    }
 
-  auto Api::public_post(const string &url) -> json {
-    return public_post(url, Map({}));
-  }
+    auto Api::signed_get(const string &url) -> json {
+      return signed_get(url, Map({}));
+    }
 
-  auto Api::user_post(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::POST, url, user_header, params);
-  }
+    auto Api::public_post(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::POST, url, public_header, params);
+    }
 
-  auto Api::user_post(const string &url) -> json {
-    return user_post(url, Map({}));
-  }
+    auto Api::public_post(const string &url) -> json {
+      return public_post(url, Map({}));
+    }
 
-  auto Api::signed_post(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::POST, url, user_header, add_signature(params));
-  }
+    auto Api::user_post(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::POST, url, user_header, params);
+    }
 
-  auto Api::signed_post(const string &url) -> json {
-    return signed_post(url, Map({}));
-  }
+    auto Api::user_post(const string &url) -> json {
+      return user_post(url, Map({}));
+    }
 
-  auto Api::public_put(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::PUT, url, public_header, params);
-  }
+    auto Api::signed_post(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::POST, url, user_header, add_signature(params));
+    }
 
-  auto Api::public_put(const string &url) -> json {
-    return public_put(url, Map({}));
-  }
+    auto Api::signed_post(const string &url) -> json {
+      return signed_post(url, Map({}));
+    }
 
-  auto Api::user_put(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::PUT, url, user_header, params);
-  }
+    auto Api::public_put(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::PUT, url, public_header, params);
+    }
 
-  auto Api::user_put(const string &url) -> json {
-    return user_put(url, Map({}));
-  }
+    auto Api::public_put(const string &url) -> json {
+      return public_put(url, Map({}));
+    }
 
-  auto Api::signed_put(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::PUT, url, user_header, add_signature(params));
-  }
+    auto Api::user_put(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::PUT, url, user_header, params);
+    }
 
-  auto Api::signed_put(const string &url) -> json {
-    return signed_put(url, Map({}));
-  }
+    auto Api::user_put(const string &url) -> json {
+      return user_put(url, Map({}));
+    }
 
-  auto Api::public_delete(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::DELETE, url, public_header, params);
-  }
+    auto Api::signed_put(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::PUT, url, user_header, add_signature(params));
+    }
 
-  auto Api::public_delete(const string &url) -> json {
-    return public_delete(url, Map({}));
-  }
+    auto Api::signed_put(const string &url) -> json {
+      return signed_put(url, Map({}));
+    }
 
-  auto Api::user_delete(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::DELETE, url, user_header, params);
-  }
+    auto Api::public_delete(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::DELETE, url, public_header, params);
+    }
 
-  auto Api::user_delete(const string &url) -> json {
-    return user_delete(url, Map({}));
-  }
+    auto Api::public_delete(const string &url) -> json {
+      return public_delete(url, Map({}));
+    }
 
-  auto Api::signed_delete(const string &url, const Map &params) -> json {
-    return request(REQUEST_TYPE::DELETE, url, user_header, add_signature(params));
-  }
+    auto Api::user_delete(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::DELETE, url, user_header, params);
+    }
 
-  auto Api::signed_delete(const string &url) -> json {
-    return signed_delete(url, Map({}));
+    auto Api::user_delete(const string &url) -> json {
+      return user_delete(url, Map({}));
+    }
+
+    auto Api::signed_delete(const string &url, const Map &params) -> json {
+      return request(REQUEST_TYPE::DELETE, url, user_header, add_signature(params));
+    }
+
+    auto Api::signed_delete(const string &url) -> json {
+      return signed_delete(url, Map({}));
+    }
   }
 }
