@@ -1,7 +1,5 @@
-#include <binance/endpoint.hpp>
+#include <binance/binance.hpp>
 using namespace binance::endpoint;
-
-#include <binance/websocket_client.hpp>
 using namespace binance::websocket_client;
 
 #include <memory>
