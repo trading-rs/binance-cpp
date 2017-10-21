@@ -53,16 +53,16 @@ namespace binance {
       auto ticker_24hr(string symbol) -> json;
       auto ticker_all_prices() -> json;
       auto ticker_all_bool_tickers() -> json;
-      auto order(string side, string type, string symbol, string quantity, const Map &options) -> json;
-      auto order(string side, string type, string symbol, string quantity) -> json;
-      auto buy_limit(string symbol, string quantity, string price, const Map &options) -> json;
-      auto buy_limit(string symbol, string quantity, string price) -> json;
-      auto buy_market(string symbol, string quantity,const Map &options) -> json;
-      auto buy_market(string symbol, string quantity) -> json;
-      auto sell_limit(string symbol, string quantity, string price, const Map &options) -> json;
-      auto sell_limit(string symbol, string quantity, string price) -> json;
-      auto sell_market(string symbol, string quantity, const Map &options) -> json;
-      auto sell_market(string symbol, string quantity) -> json;
+      auto order(string side, string type, string symbol, double quantity, const Map &options) -> json;
+      auto order(string side, string type, string symbol, double quantity) -> json;
+      auto buy_limit(string symbol, double quantity, double price, const Map &options) -> json;
+      auto buy_limit(string symbol, double quantity, double price) -> json;
+      auto buy_market(string symbol, double quantity,const Map &options) -> json;
+      auto buy_market(string symbol, double quantity) -> json;
+      auto sell_limit(string symbol, double quantity, double price, const Map &options) -> json;
+      auto sell_limit(string symbol, double quantity, double price) -> json;
+      auto sell_market(string symbol, double quantity, const Map &options) -> json;
+      auto sell_market(string symbol, double quantity) -> json;
       auto order_status(string symbol, string order_id) -> json;
       auto cancle_order(string symbol, string order_id) -> json;
       auto open_orders(string symbol) -> json;
@@ -145,11 +145,11 @@ namespace binance {
       return this->api->public_get("/api/v1/ticker/allBookTickers");
     }
 
-    auto Endpoint::order(string side, string type, string symbol, string quantity, const Map &options) -> json {
+    auto Endpoint::order(string side, string type, string symbol, double quantity, const Map &options) -> json {
       Map params = options;
       params["side"] = side;
       params["symbol"] = symbol;
-      params["quantity"] = quantity;
+      params["quantity"] = format("{}", quantity);
       params["type"] = type;
       if (type == "LIMIT") {
         params["timeInForce"] = "GTC";
@@ -157,43 +157,43 @@ namespace binance {
       return this->api->signed_post("/api/v3/order", params);
     }
 
-    auto Endpoint::order(string side, string type, string symbol, string quantity) -> json {
+    auto Endpoint::order(string side, string type, string symbol, double quantity) -> json {
       return this->order(side, type, symbol, quantity, Map({}));
     }
 
-    auto Endpoint::buy_limit(string symbol, string quantity, string price, const Map &options) -> json {
+    auto Endpoint::buy_limit(string symbol, double quantity, double price, const Map &options) -> json {
       Map params = options;
-      params["price"] = price;
+      params["price"] = format("{}", price);
       return this->order("BUY", "LIMIT", symbol, quantity, params);
     }
 
-    auto Endpoint::buy_limit(string symbol, string quantity, string price) -> json {
+    auto Endpoint::buy_limit(string symbol, double quantity, double price) -> json {
       return this->buy_limit(symbol, quantity, price, Map({}));
     }
 
-    auto Endpoint::buy_market(string symbol, string quantity, const Map &options) -> json {
+    auto Endpoint::buy_market(string symbol, double quantity, const Map &options) -> json {
       return this->order("BUY", "MARKET", symbol, quantity, options);
     }
 
-    auto Endpoint::buy_market(string symbol, string quantity) -> json {
+    auto Endpoint::buy_market(string symbol, double quantity) -> json {
       return this->buy_market(symbol, quantity, Map({}));
     }
 
-    auto Endpoint::sell_limit(string symbol, string quantity, string price, const Map &options) -> json {
+    auto Endpoint::sell_limit(string symbol, double quantity, double price, const Map &options) -> json {
       Map params = options;
-      params["price"] = price;
+      params["price"] = format("{}", price);
       return this->order("SELL", "LIMIT", symbol, quantity, params);
     }
 
-    auto Endpoint::sell_limit(string symbol, string quantity, string price) -> json {
+    auto Endpoint::sell_limit(string symbol, double quantity, double price) -> json {
       return this->sell_limit(symbol, quantity, price, Map({}));
     }
 
-    auto Endpoint::sell_market(string symbol, string quantity, const Map &options) -> json {
+    auto Endpoint::sell_market(string symbol, double quantity, const Map &options) -> json {
       return this->order("SELL", "MARKET", symbol, quantity, options);
     }
 
-    auto Endpoint::sell_market(string symbol, string quantity) -> json {
+    auto Endpoint::sell_market(string symbol, double quantity) -> json {
       return this->sell_market(symbol, quantity, Map({}));
     }
 
