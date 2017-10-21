@@ -13,17 +13,20 @@
 #include <memory>
 #include <string>
 #include <json.hpp>
+#include <spdlog/spdlog.h>
 
 using json = nlohmann::json;
 using tcp = boost::asio::ip::tcp;               // from <boost/asio/ip/tcp.hpp>
 namespace ssl = boost::asio::ssl;               // from <boost/asio/ssl.hpp>
 namespace websocket = boost::beast::websocket;  // from <boost/beast/websocket.hpp>
+namespace spd = spdlog;
 
 namespace websocket_client {
   typedef std::function<void(json)> async_callback;
+  shared_ptr<spd::logger> logger = spd::stdout_color_mt("WEBSOCKET");
 
   void fail(boost::system::error_code ec, char const* what) {
-    std::cerr << what << ": " << ec.message() << "\n";
+    logger->error("{0}: {1}", what, ec.message());
   }
 
   // Sends a WebSocket message and prints the response
@@ -113,6 +116,9 @@ namespace websocket_client {
         return fail(ec, "read");
 
       auto data_str = boost::beast::buffers_to_string(buffer_.data());
+
+      logger->info("{0}: {1}", path_, data_str);
+
       auto data_json = nlohmann::json::parse(data_str);
 
       callback_(data_json);

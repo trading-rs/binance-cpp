@@ -30,10 +30,11 @@ using namespace fmt;
 using namespace cryptlite;
 
 #include <spdlog/spdlog.h>
-using namespace spdlog;
+namespace spd = spdlog;
 
 namespace api {
   typedef map<string, string> Map;
+  shared_ptr<spd::logger> logger = spd::stdout_color_mt("API");
 
   enum class REQUEST_TYPE : size_t {
     GET,
@@ -51,11 +52,11 @@ namespace api {
     Header user_header;
 
   public:
-    explicit Api(string key, string secret);
+    explicit Api(const string &key, const string &secret);
     auto flatten_params(const Map &params) -> string;
     auto append_params(const string &url, const Map &params) -> string;
     auto append_params(const string &url, const string &params_str) -> string;
-    auto response_tweak(Response response) -> json;
+    auto response_tweak(const string &method, const string &url, const Response &response) -> json;
     auto add_signature(const Map &params) -> Map;
     auto params_to_payload(const Map &params) -> Payload;
     auto request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json;
@@ -85,7 +86,7 @@ namespace api {
     auto signed_delete(const string &url) -> json;
   };
 
-  Api::Api(string key, string secret): api_key(key), api_secret(secret) {
+  Api::Api(const string &key, const string &secret): api_key(key), api_secret(secret) {
     this->domain = "https://www.binance.com";
     this->public_header = {
       { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
@@ -125,11 +126,12 @@ namespace api {
     }
   }
 
-  auto Api::response_tweak(Response response) -> json {
+  auto Api::response_tweak(const string &method, const string &url, const Response &response) -> json {
     if (response.status_code < 400) {
+      logger->info("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
       return nlohmann::json::parse(response.text);
     } else {
-      cout << response.status_code << " " << response.text << endl;
+      logger->error("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
       return nullptr;
     }
   }
@@ -160,31 +162,36 @@ namespace api {
     session.SetVerifySsl(VerifySsl{ false });
 
     Response response;
+    string method_str;
     switch (method) {
     case REQUEST_TYPE::GET: {
       response = session.Get();
+      method_str = "GET";
       break;
     }
     case REQUEST_TYPE::POST: {
       session.SetPayload(params_to_payload(params));
       response = session.Post();
+      method_str = "POST";
       break;
     }
     case REQUEST_TYPE::PUT: {
       session.SetPayload(params_to_payload(params));
       response = session.Put();
+      method_str = "PUT";
       break;
     }
     case REQUEST_TYPE::DELETE: {
       session.SetPayload(params_to_payload(params));
       response = session.Delete();
+      method_str = "DELETE";
       break;
     }
     default:
       break;
     }
 
-    return response_tweak(response);
+    return response_tweak(method_str, url, response);
   }
 
   auto Api::public_get(const string &url, const Map &params) -> json {
