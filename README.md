@@ -3,9 +3,7 @@
 ## Prerequisite
 
 ```sh
-git submodule update --init --recursive
-./script/build-openssl.sh
-./script/build-boost.sh
+./script/pre-install.sh
 ```
 
 ## Build
