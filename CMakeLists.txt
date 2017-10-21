@@ -72,7 +72,7 @@ cpr_option(BUILD_BINANCE_TESTS "Set to ON to build binance tests." ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14")
 
 if(BUILD_BINANCE_EXEC)
-  add_executable(binance_exec example/main.cc)
+  add_executable(binance_exec example/example.cc)
   target_link_libraries(
     binance_exec
     ${OPENSSL_LIBRARIES}/libssl.a

@@ -10,7 +10,7 @@ install:
 script:
 - g++ --version
 - c++ --version
-- git submodule update --init --recursive
+- "./script/pre-install.sh"
 - "./script/build-openssl.sh"
 - "./script/build-boost.sh"
 - "./script/build.sh"
