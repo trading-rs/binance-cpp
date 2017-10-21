@@ -1,20 +1,35 @@
+# Binance API Wrapper for Modern C++
+
 [![Build Status](https://travis-ci.org/zjhmale/binance-cpp.svg?branch=master)](https://travis-ci.org/zjhmale/binance-cpp)
 
-## Prerequisite
+## Getting Started
+
+### Prerequisite
 
 ```sh
 ./script/pre-install.sh
 ```
 
-## Build
+### Setup Environment Variables (optional)
+
+```
+export BINANCE_API_KEY="<api_key>"
+export BINANCE_API_SECRET="<secret_key>"
+```
+
+### Build
 
 ```
 ./script/build.sh
 ```
 
-## Test
+### Test
 
 ```
 ./script/build.sh
 ./script/test.sh
 ```
+
+### Documentation
+
+![API DOC](./doc.md)
