@@ -19,10 +19,11 @@ auto pre_check() {
 int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
-  (endpoint->buy_limit("ETHBTC", 1.0, 0.069)) >>= print_result;
-  (endpoint->buy_market("ETHBTC", 1.0)) >>= print_result;
-  (endpoint->order_status("ETHBTC", "1")) >>= print_result;
-  (endpoint->cancle_order("ETHBTC", "1")) >>= print_result;
+  endpoint->time() >>= print_result<long>;
+  endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<json>;
+  endpoint->buy_market("ETHBTC", 1.0) >>= print_result<json>;
+  endpoint->order_status("ETHBTC", "1") >>= print_result<json>;
+  endpoint->cancle_order("ETHBTC", "1") >>= print_result<json>;
 
   endpoint->depth_websocket("ethbtc",  [](json data) {
       cout << data.dump(2) << endl;

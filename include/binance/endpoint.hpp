@@ -19,6 +19,15 @@ using namespace std;
 
 namespace binance {
   namespace endpoint {
+    function<Maybe<long>(json)> get_server_time = [](const auto &j) {
+      auto st = j["serverTime"];
+      if (st != nullptr) {
+        return Maybe<long>(st.template get<long>());
+      } else {
+        return Nothing<long>;
+      }
+    };
+
     class Endpoint {
     private:
       shared_ptr<Api> api;
@@ -26,7 +35,7 @@ namespace binance {
     public:
       Endpoint(string key, string secret);
       auto ping() -> Maybe<json>;
-      auto time() -> Maybe<json>;
+      auto time() -> Maybe<long>;
       /**
          @options:
          'limit': legal range is { 50, 20, 100, 500, 5, 200, 10 }
@@ -98,8 +107,8 @@ namespace binance {
       return this->api->public_get("/api/v1/ping");
     }
 
-    auto Endpoint::time() -> Maybe<json> {
-      return this->api->public_get("/api/v1/time");
+    auto Endpoint::time() -> Maybe<long> {
+      return this->api->public_get("/api/v1/time") >>= get_server_time;
     }
 
     auto Endpoint::depth(string symbol, const Map &options) -> Maybe<json> {
