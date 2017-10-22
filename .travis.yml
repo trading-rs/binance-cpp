@@ -7,13 +7,12 @@ before_install:
 install:
 - sudo apt-get install -qq g++-5
 - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
-script:
+before_script:
 - g++ --version
 - c++ --version
 - "./script/pre-install.sh"
-- "./script/build-openssl.sh"
-- "./script/build-boost.sh"
 - "./script/build.sh"
+script:
 - "./script/test.sh"
 env:
   global:
