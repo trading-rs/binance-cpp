@@ -18,36 +18,36 @@ TEST_CASE("Test Binance general endpoints") {
   REQUIRE(pre_check());
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 
-  REQUIRE(endpoint->ping() != nullptr);
-  REQUIRE(endpoint->time() != nullptr);
+  REQUIRE(endpoint->ping().isJust());
+  REQUIRE(endpoint->time().isJust());
 }
 
 TEST_CASE("Test Binance market data endpoints") {
   REQUIRE(pre_check());
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 
-  REQUIRE(endpoint->depth("LTCBTC") != nullptr);
-  REQUIRE(endpoint->depth("LTCBTC", Map({{ "limit", "5" }})) != nullptr);
-  REQUIRE(endpoint->agg_trades("LTCBTC") != nullptr);
-  REQUIRE(endpoint->agg_trades("LTCBTC", Map({{ "limit", "5" }})) != nullptr);
-  REQUIRE(endpoint->klines("LTCBTC","5m") != nullptr);
-  REQUIRE(endpoint->klines("LTCBTC", "5m", Map({{ "limit", "5" }})) != nullptr);
-  REQUIRE(endpoint->ticker_24hr("LTCBTC") != nullptr);
-  REQUIRE(endpoint->ticker_all_prices() != nullptr);
-  REQUIRE(endpoint->ticker_all_bool_tickers() != nullptr);
+  REQUIRE(endpoint->depth("LTCBTC").isJust());
+  REQUIRE(endpoint->depth("LTCBTC", Map({{ "limit", "5" }})).isJust());
+  REQUIRE(endpoint->agg_trades("LTCBTC").isJust());
+  REQUIRE(endpoint->agg_trades("LTCBTC", Map({{ "limit", "5" }})).isJust());
+  REQUIRE(endpoint->klines("LTCBTC","5m").isJust());
+  REQUIRE(endpoint->klines("LTCBTC", "5m", Map({{ "limit", "5" }})).isJust());
+  REQUIRE(endpoint->ticker_24hr("LTCBTC").isJust());
+  REQUIRE(endpoint->ticker_all_prices().isJust());
+  REQUIRE(endpoint->ticker_all_bool_tickers().isJust());
 }
 
 TEST_CASE("Test Binance account endpoints") {
   REQUIRE(pre_check());
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 
-  REQUIRE(endpoint->open_orders("ETHBTC") != nullptr);
-  REQUIRE(endpoint->all_orders("ETHBTC") != nullptr);
-  REQUIRE(endpoint->my_account() != nullptr);
-  REQUIRE(endpoint->my_trades("ETHBTC") != nullptr);
+  REQUIRE(endpoint->open_orders("ETHBTC").isJust());
+  REQUIRE(endpoint->all_orders("ETHBTC").isJust());
+  REQUIRE(endpoint->my_account().isJust());
+  REQUIRE(endpoint->my_trades("ETHBTC").isJust());
 
   auto jr = endpoint->start_user_data_stream();
-  REQUIRE(jr != nullptr);
-  REQUIRE(endpoint->keepalive_user_data_stream(jr["listenKey"]) != nullptr);
-  REQUIRE(endpoint->close_user_data_stream(jr["listenKey"]) != nullptr);
+  REQUIRE(jr.isJust());
+  REQUIRE(endpoint->keepalive_user_data_stream(jr.fromJust()["listenKey"]).isJust());
+  REQUIRE(endpoint->close_user_data_stream(jr.fromJust()["listenKey"]).isJust());
 }

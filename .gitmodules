@@ -28,3 +28,6 @@
 [submodule "libs/spdlog"]
 	path = libs/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "libs/fp"]
+	path = libs/fp
+	url = https://github.com/zjhmale/functional-cpp.git

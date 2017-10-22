@@ -15,18 +15,18 @@ auto pre_check() {
     throw runtime_error("Please setup binance APIKEY and APISECRET!");
 }
 
-auto print_result(const json &result) -> void {
-  if (result != nullptr)
-    cout << result.dump(2) << endl;
-}
+function<Maybe<json>(json)> print_result = [](const json &result) {
+  cout << result.dump(2) << endl;
+  return Nothing<json>;
+};
 
 int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
-  print_result(endpoint->buy_limit("ETHBTC", 1.0, 0.069));
-  print_result(endpoint->buy_market("ETHBTC", 1.0));
-  print_result(endpoint->order_status("ETHBTC", "1"));
-  print_result(endpoint->cancle_order("ETHBTC", "1"));
+  (endpoint->buy_limit("ETHBTC", 1.0, 0.069)) >>= print_result;
+  (endpoint->buy_market("ETHBTC", 1.0)) >>= print_result;
+  (endpoint->order_status("ETHBTC", "1")) >>= print_result;
+  (endpoint->cancle_order("ETHBTC", "1")) >>= print_result;
 
   endpoint->depth_websocket("ethbtc",  [](json data) {
       cout << data.dump(2) << endl;
@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
       cout << data.dump(2) << endl;
     });
   auto jr = endpoint->start_user_data_stream();
-  if (jr != nullptr) {
-    auto listen_key = jr["listenKey"];
+  if (jr.isJust()) {
+    auto listen_key = jr.fromJust()["listenKey"];
     endpoint->user_data_websockets(listen_key, [](json data) {
         cout << data.dump(2) << endl;
       });

@@ -51,6 +51,7 @@ if(CURL_FOUND)
     set(USE_SYSTEM_CURL ON CACHE BOOL "Use the system curl for faster builds")
 endif()
 add_subdirectory(libs/cpr)
+add_subdirectory(libs/fp)
 
 include_directories(
   ${CATCH_INCLUDE_DIR}
@@ -64,6 +65,7 @@ include_directories(
   ${BEAST_INCLUDE_DIR}
   ${SPDLOG_INCLUDE_DIR}
   ${BINANCE_INCLUDE_DIR}
+  ${FP_INCLUDE_DIR}
   )
 
 cpr_option(BUILD_BINANCE_EXEC "Set to ON to build binance exec." ON)

@@ -3,6 +3,9 @@
 #include <json.hpp>
 using json = nlohmann::json;
 
+#include <fp/fp.hpp>
+using namespace fp;
+
 #include <string>
 #include <memory>
 #include <vector>
@@ -57,34 +60,34 @@ namespace binance {
       auto flatten_params(const Map &params) -> string;
       auto append_params(const string &url, const Map &params) -> string;
       auto append_params(const string &url, const string &params_str) -> string;
-      auto response_tweak(const string &method, const string &url, const Response &response) -> json;
+      auto response_tweak(const string &method, const string &url, const Response &response) -> Maybe<json>;
       auto add_signature(const Map &params) -> Map;
       auto params_to_payload(const Map &params) -> Payload;
-      auto request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json;
-      auto public_get(const string &url, const Map &params) -> json;
-      auto public_get(const string &url) -> json;
-      auto user_get(const string &url, const  Map &params) -> json;
-      auto user_get(const string &url) -> json;
-      auto signed_get(const string &url, const  Map &params) -> json;
-      auto signed_get(const string &url) -> json;
-      auto public_post(const string &url, const Map &params) -> json;
-      auto public_post(const string &url) -> json;
-      auto user_post(const string &url, const  Map &params) -> json;
-      auto user_post(const string &url) -> json;
-      auto signed_post(const string &url, const  Map &params) -> json;
-      auto signed_post(const string &url) -> json;
-      auto public_put(const string &url, const Map &params) -> json;
-      auto public_put(const string &url) -> json;
-      auto user_put(const string &url, const  Map &params) -> json;
-      auto user_put(const string &url) -> json;
-      auto signed_put(const string &url, const  Map &params) -> json;
-      auto signed_put(const string &url) -> json;
-      auto public_delete(const string &url, const Map &params) -> json;
-      auto public_delete(const string &url) -> json;
-      auto user_delete(const string &url, const  Map &params) -> json;
-      auto user_delete(const string &url) -> json;
-      auto signed_delete(const string &url, const  Map &params) -> json;
-      auto signed_delete(const string &url) -> json;
+      auto request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> Maybe<json>;
+      auto public_get(const string &url, const Map &params) -> Maybe<json>;
+      auto public_get(const string &url) -> Maybe<json>;
+      auto user_get(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_get(const string &url) -> Maybe<json>;
+      auto signed_get(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_get(const string &url) -> Maybe<json>;
+      auto public_post(const string &url, const Map &params) -> Maybe<json>;
+      auto public_post(const string &url) -> Maybe<json>;
+      auto user_post(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_post(const string &url) -> Maybe<json>;
+      auto signed_post(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_post(const string &url) -> Maybe<json>;
+      auto public_put(const string &url, const Map &params) -> Maybe<json>;
+      auto public_put(const string &url) -> Maybe<json>;
+      auto user_put(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_put(const string &url) -> Maybe<json>;
+      auto signed_put(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_put(const string &url) -> Maybe<json>;
+      auto public_delete(const string &url, const Map &params) -> Maybe<json>;
+      auto public_delete(const string &url) -> Maybe<json>;
+      auto user_delete(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_delete(const string &url) -> Maybe<json>;
+      auto signed_delete(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_delete(const string &url) -> Maybe<json>;
     };
 
     Api::Api(const string &key, const string &secret): api_key(key), api_secret(secret) {
@@ -127,13 +130,13 @@ namespace binance {
       }
     }
 
-    auto Api::response_tweak(const string &method, const string &url, const Response &response) -> json {
+    auto Api::response_tweak(const string &method, const string &url, const Response &response) -> Maybe<json> {
       if (response.status_code < 400) {
         logger->info("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
-        return nlohmann::json::parse(response.text);
+        return Maybe<json>(nlohmann::json::parse(response.text));
       } else {
         logger->error("{0} {1}, status code: {2}, content: {3}", method, url, response.status_code, response.text);
-        return nullptr;
+        return Nothing<json>;
       }
     }
 
@@ -156,7 +159,7 @@ namespace binance {
       return payload;
     }
 
-    auto Api::request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> json {
+    auto Api::request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> Maybe<json> {
       Session session;
       session.SetUrl(Url{ format("{0}{1}", this->domain, url) });
       session.SetHeader(header);
@@ -195,99 +198,99 @@ namespace binance {
       return response_tweak(method_str, url, response);
     }
 
-    auto Api::public_get(const string &url, const Map &params) -> json {
+    auto Api::public_get(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::GET, append_params(url, params), public_header, Map({}));
     }
 
-    auto Api::public_get(const string &url) -> json {
+    auto Api::public_get(const string &url) -> Maybe<json> {
       return public_get(url, Map({}));
     }
 
-    auto Api::user_get(const string &url, const  Map &params) -> json {
+    auto Api::user_get(const string &url, const  Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::GET, append_params(url, params), user_header, Map({}));
     }
 
-    auto Api::user_get(const string &url) -> json {
+    auto Api::user_get(const string &url) -> Maybe<json> {
       return user_get(url, Map({}));
     }
 
-    auto Api::signed_get(const string &url, const Map &params) -> json {
+    auto Api::signed_get(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::GET, append_params(url, add_signature(params)), user_header, Map({}));
     }
 
-    auto Api::signed_get(const string &url) -> json {
+    auto Api::signed_get(const string &url) -> Maybe<json> {
       return signed_get(url, Map({}));
     }
 
-    auto Api::public_post(const string &url, const Map &params) -> json {
+    auto Api::public_post(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::POST, url, public_header, params);
     }
 
-    auto Api::public_post(const string &url) -> json {
+    auto Api::public_post(const string &url) -> Maybe<json> {
       return public_post(url, Map({}));
     }
 
-    auto Api::user_post(const string &url, const Map &params) -> json {
+    auto Api::user_post(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::POST, url, user_header, params);
     }
 
-    auto Api::user_post(const string &url) -> json {
+    auto Api::user_post(const string &url) -> Maybe<json> {
       return user_post(url, Map({}));
     }
 
-    auto Api::signed_post(const string &url, const Map &params) -> json {
+    auto Api::signed_post(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::POST, url, user_header, add_signature(params));
     }
 
-    auto Api::signed_post(const string &url) -> json {
+    auto Api::signed_post(const string &url) -> Maybe<json> {
       return signed_post(url, Map({}));
     }
 
-    auto Api::public_put(const string &url, const Map &params) -> json {
+    auto Api::public_put(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::PUT, url, public_header, params);
     }
 
-    auto Api::public_put(const string &url) -> json {
+    auto Api::public_put(const string &url) -> Maybe<json> {
       return public_put(url, Map({}));
     }
 
-    auto Api::user_put(const string &url, const Map &params) -> json {
+    auto Api::user_put(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::PUT, url, user_header, params);
     }
 
-    auto Api::user_put(const string &url) -> json {
+    auto Api::user_put(const string &url) -> Maybe<json> {
       return user_put(url, Map({}));
     }
 
-    auto Api::signed_put(const string &url, const Map &params) -> json {
+    auto Api::signed_put(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::PUT, url, user_header, add_signature(params));
     }
 
-    auto Api::signed_put(const string &url) -> json {
+    auto Api::signed_put(const string &url) -> Maybe<json> {
       return signed_put(url, Map({}));
     }
 
-    auto Api::public_delete(const string &url, const Map &params) -> json {
+    auto Api::public_delete(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::DELETE, url, public_header, params);
     }
 
-    auto Api::public_delete(const string &url) -> json {
+    auto Api::public_delete(const string &url) -> Maybe<json> {
       return public_delete(url, Map({}));
     }
 
-    auto Api::user_delete(const string &url, const Map &params) -> json {
+    auto Api::user_delete(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::DELETE, url, user_header, params);
     }
 
-    auto Api::user_delete(const string &url) -> json {
+    auto Api::user_delete(const string &url) -> Maybe<json> {
       return user_delete(url, Map({}));
     }
 
-    auto Api::signed_delete(const string &url, const Map &params) -> json {
+    auto Api::signed_delete(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::DELETE, url, user_header, add_signature(params));
     }
 
-    auto Api::signed_delete(const string &url) -> json {
+    auto Api::signed_delete(const string &url) -> Maybe<json> {
       return signed_delete(url, Map({}));
     }
   }
