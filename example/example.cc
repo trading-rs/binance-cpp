@@ -1,6 +1,7 @@
 #include <binance/binance.hpp>
 using namespace binance::endpoint;
 using namespace binance::websocket_client;
+using namespace binance::extra;
 
 #include <memory>
 #include <utility>
@@ -14,11 +15,6 @@ auto pre_check() {
   if (!(api_key && api_secret))
     throw runtime_error("Please setup binance APIKEY and APISECRET!");
 }
-
-function<Maybe<json>(json)> print_result = [](const json &result) {
-  cout << result.dump(2) << endl;
-  return Nothing<json>;
-};
 
 int main(int argc, char** argv) {
   pre_check();
