@@ -19,6 +19,16 @@ auto pre_check() {
 int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
+
+  function<Maybe<AggTrade>(vector<AggTrade>)> get_first_agg_trade = [](const auto &ats) {
+    if (ats.size() == 0) {
+      return Nothing<AggTrade>;
+    } else {
+      return Maybe<AggTrade>(ats[0]);
+    }
+  };
+  (endpoint->agg_trades("LTCBTC") >>= get_first_agg_trade) >>= print_result<AggTrade>;
+
   function<Maybe<OrderBookEntry>(OrderBook)> get_first_bid = [](const auto &ob) {
     if (ob.bids.size() == 0) {
       return Nothing<OrderBookEntry>;
@@ -27,6 +37,7 @@ int main(int argc, char** argv) {
     }
   };
   (endpoint->orderBook("LTCBTC", 5) >>= get_first_bid) >>= print_result<OrderBookEntry>;
+
   endpoint->ping() >>= print_result<json>;
   endpoint->time() >>= print_result<long>;
   endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<json>;

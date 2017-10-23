@@ -46,6 +46,16 @@ namespace binance {
       }
     };
 
+    function<Maybe<vector<AggTrade>>(json)> get_agg_trades = [](const auto &j) {
+      if (j.is_array()) {
+        vector<AggTrade> ats = j;
+        return Maybe<vector<AggTrade>>(ats);
+      } else {
+        logger->error("{0} is not a json array!", j.dump());
+        return Nothing<vector<AggTrade>>;
+      }
+    };
+
     class Endpoint {
     private:
       shared_ptr<Api> api;
@@ -68,8 +78,8 @@ namespace binance {
          endTime
          limit
       */
-      auto agg_trades(string symbol, const Map &options) -> Maybe<json>;
-      auto agg_trades(string symbol) -> Maybe<json>;
+      auto agg_trades(string symbol, const Map &options) -> Maybe<vector<AggTrade>>;
+      auto agg_trades(string symbol) -> Maybe<vector<AggTrade>>;
       /**
          @options:
          limit
@@ -144,13 +154,13 @@ namespace binance {
       return this->orderBook(symbol, Map({}));
     }
 
-    auto Endpoint::agg_trades(string symbol, const Map &options) -> Maybe<json> {
+    auto Endpoint::agg_trades(string symbol, const Map &options) -> Maybe<vector<AggTrade>> {
       Map params = options;
       params["symbol"] = symbol;
-      return this->api->public_get("/api/v1/aggTrades", params);
+      return this->api->public_get("/api/v1/aggTrades", params) >>= get_agg_trades;
     }
 
-    auto Endpoint::agg_trades(string symbol) -> Maybe<json> {
+    auto Endpoint::agg_trades(string symbol) -> Maybe<vector<AggTrade>> {
       return this->agg_trades(symbol, Map({}));
     }
 

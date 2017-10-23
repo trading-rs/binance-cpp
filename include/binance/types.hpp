@@ -55,6 +55,41 @@ namespace binance {
       o.asks = j.at("asks").get<vector<OrderBookEntry>>();
     }
 
+    struct AggTrade {
+      long aggregateTradeId;
+      string price;
+      string quantity;
+      long firstTradeId;
+      long lastTradeId;
+      long timestamp;
+      bool isBuyerMaker;
+      bool isBestPriceMatch;
+    };
+
+    void to_json(json& j, const AggTrade& a) {
+      j = json{
+        { "a", a.aggregateTradeId },
+        { "p", a.price },
+        { "q", a.quantity },
+        { "f", a.firstTradeId },
+        { "l", a.lastTradeId },
+        { "T", a.timestamp },
+        { "m", a.isBuyerMaker },
+        { "M", a.isBestPriceMatch }
+      };
+    }
+
+    void from_json(const json& j, AggTrade& a) {
+      a.aggregateTradeId = j.at("a").get<long>();
+      a.price = j.at("p").get<string>();
+      a.quantity = j.at("q").get<string>();
+      a.firstTradeId = j.at("f").get<long>();
+      a.lastTradeId = j.at("l").get<long>();
+      a.timestamp = j.at("T").get<long>();
+      a.isBuyerMaker = j.at("m").get<bool>();
+      a.isBestPriceMatch = j.at("M").get<bool>();
+    }
+
     struct Balance {
       string asset;
       double free;
