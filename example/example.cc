@@ -19,6 +19,14 @@ auto pre_check() {
 int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
+  function<Maybe<OrderBookEntry>(OrderBook)> get_first_bid = [](const auto &ob) {
+    if (ob.bids.size() == 0) {
+      return Nothing<OrderBookEntry>;
+    } else {
+      return Maybe<OrderBookEntry>(ob.bids[0]);
+    }
+  };
+  (endpoint->orderBook("LTCBTC", 5) >>= get_first_bid) >>= print_result<OrderBookEntry>;
   endpoint->ping() >>= print_result<json>;
   endpoint->time() >>= print_result<long>;
   endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<json>;

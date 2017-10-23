@@ -6,6 +6,9 @@ using namespace binance::api;
 #include "websocket_client.hpp"
 using namespace binance::websocket_client;
 
+#include "types.hpp"
+using namespace binance::types;
+
 #ifndef FORMAT_HEADER
 #define FORMAT_HEADER
 #include <fmt/format.h>
@@ -19,12 +22,27 @@ using namespace std;
 
 namespace binance {
   namespace endpoint {
+    shared_ptr<spd::logger> logger = spd::stdout_color_mt("ENDPOINT");
+
     function<Maybe<long>(json)> get_server_time = [](const auto &j) {
       auto st = j["serverTime"];
       if (st != nullptr) {
         return Maybe<long>(st.template get<long>());
       } else {
+        logger->error("{0} does not contain `serverTime` property!", j.dump());
         return Nothing<long>;
+      }
+    };
+
+    function<Maybe<OrderBook>(json)> get_order_book = [](const auto &j) {
+      if (j["lastUpdateId"] != nullptr
+          && j["bids"] != nullptr
+          && j["asks"] != nullptr) {
+        OrderBook ob = j;
+        return Maybe<OrderBook>(ob);
+      } else {
+        logger->error("{0} does not contain `lastUpdateId` or `bids` or `asks` property!", j.dump());
+        return Nothing<OrderBook>;
       }
     };
 
@@ -40,8 +58,9 @@ namespace binance {
          @options:
          'limit': legal range is { 50, 20, 100, 500, 5, 200, 10 }
       */
-      auto depth(string symbol, const Map &options) -> Maybe<json>;
-      auto depth(string symbol) -> Maybe<json>;
+      auto orderBook(string symbol, const Map &options) -> Maybe<OrderBook>;
+      auto orderBook(string symbol, int limit) -> Maybe <OrderBook>;
+      auto orderBook(string symbol) -> Maybe<OrderBook>;
       /**
          @options:
          fromId
@@ -111,14 +130,18 @@ namespace binance {
       return this->api->public_get("/api/v1/time") >>= get_server_time;
     }
 
-    auto Endpoint::depth(string symbol, const Map &options) -> Maybe<json> {
+    auto Endpoint::orderBook(string symbol, const Map &options) -> Maybe<OrderBook> {
       Map params = options;
       params["symbol"] = symbol;
-      return this->api->public_get("/api/v1/depth", params);
+      return this->api->public_get("/api/v1/depth", params) >>= get_order_book;
     }
 
-    auto Endpoint::depth(string symbol) -> Maybe<json> {
-      return this->depth(symbol, Map({}));
+    auto Endpoint::orderBook(string symbol, int limit) -> Maybe<OrderBook> {
+      return this->orderBook(symbol, Map({{ "limit", format("{}", limit) }}));
+    }
+
+    auto Endpoint::orderBook(string symbol) -> Maybe<OrderBook> {
+      return this->orderBook(symbol, Map({}));
     }
 
     auto Endpoint::agg_trades(string symbol, const Map &options) -> Maybe<json> {

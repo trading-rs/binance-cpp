@@ -1,5 +1,8 @@
 #pragma once
 
+#include "types.hpp"
+using namespace binance::types;
+
 #include <json.hpp>
 using json = nlohmann::json;
 
@@ -20,6 +23,11 @@ namespace binance {
     template <>
     function<Maybe<json>(long)> print_result<long> = [](const auto &result) {
       cout << result << endl;
+      return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(OrderBookEntry)> print_result<OrderBookEntry> = [](const auto &result) {
+      cout << result.price << " - " << result.qty << endl;
       return Nothing<json>;
     };
   }
