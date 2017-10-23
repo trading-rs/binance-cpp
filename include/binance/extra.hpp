@@ -32,15 +32,15 @@ namespace binance {
     };
     template <>
     function<Maybe<json>(AggTrade)> print_result<AggTrade> = [](const auto &result) {
-      cout << format("aggregateTradeId = {0}, price = {1}, quantity = {2}, firstTradeId = {3}, lastTradeId = {4}, timestamp = {5}, isBuyerMaker = {6}, isBestPriceMatch = {7}",
-                     result.aggregateTradeId,
+      cout << format("aggregate_trade_id = {0}, price = {1}, quantity = {2}, first_trade_id = {3}, last_trade_id = {4}, timestamp = {5}, is_buyer_maker = {6}, is_best_price_match = {7}",
+                     result.aggregate_trade_id,
                      result.price,
                      result.quantity,
-                     result.firstTradeId,
-                     result.lastTradeId,
+                     result.first_trade_id,
+                     result.last_trade_id,
                      result.timestamp,
-                     result.isBuyerMaker,
-                     result.isBestPriceMatch) << endl;
+                     result.is_buyer_maker,
+                     result.is_best_price_match) << endl;
       return Nothing<json>;
     };
   }

@@ -68,9 +68,9 @@ namespace binance {
          @options:
          'limit': legal range is { 50, 20, 100, 500, 5, 200, 10 }
       */
-      auto orderBook(string symbol, const Map &options) -> Maybe<OrderBook>;
-      auto orderBook(string symbol, int limit) -> Maybe <OrderBook>;
-      auto orderBook(string symbol) -> Maybe<OrderBook>;
+      auto order_book(string symbol, const Map &options) -> Maybe<OrderBook>;
+      auto order_book(string symbol, int limit) -> Maybe <OrderBook>;
+      auto order_book(string symbol) -> Maybe<OrderBook>;
       /**
          @options:
          fromId
@@ -140,18 +140,18 @@ namespace binance {
       return this->api->public_get("/api/v1/time") >>= get_server_time;
     }
 
-    auto Endpoint::orderBook(string symbol, const Map &options) -> Maybe<OrderBook> {
+    auto Endpoint::order_book(string symbol, const Map &options) -> Maybe<OrderBook> {
       Map params = options;
       params["symbol"] = symbol;
       return this->api->public_get("/api/v1/depth", params) >>= get_order_book;
     }
 
-    auto Endpoint::orderBook(string symbol, int limit) -> Maybe<OrderBook> {
-      return this->orderBook(symbol, Map({{ "limit", format("{}", limit) }}));
+    auto Endpoint::order_book(string symbol, int limit) -> Maybe<OrderBook> {
+      return this->order_book(symbol, Map({{ "limit", format("{}", limit) }}));
     }
 
-    auto Endpoint::orderBook(string symbol) -> Maybe<OrderBook> {
-      return this->orderBook(symbol, Map({}));
+    auto Endpoint::order_book(string symbol) -> Maybe<OrderBook> {
+      return this->order_book(symbol, Map({}));
     }
 
     auto Endpoint::agg_trades(string symbol, const Map &options) -> Maybe<vector<AggTrade>> {

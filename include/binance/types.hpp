@@ -36,58 +36,58 @@ namespace binance {
     }
 
     struct OrderBook {
-      long lastUpdateId;
+      long last_update_id;
       vector<OrderBookEntry> bids;
       vector<OrderBookEntry> asks;
     };
 
     void to_json(json& j, const OrderBook& o) {
       j = json{
-        { "lastUpdateId", o.lastUpdateId },
+        { "lastUpdateId", o.last_update_id },
         { "bids", o.bids },
         { "asks", o.asks }
       };
     }
 
     void from_json(const json& j, OrderBook& o) {
-      o.lastUpdateId = j.at("lastUpdateId").get<long>();
+      o.last_update_id = j.at("lastUpdateId").get<long>();
       o.bids = j.at("bids").get<vector<OrderBookEntry>>();
       o.asks = j.at("asks").get<vector<OrderBookEntry>>();
     }
 
     struct AggTrade {
-      long aggregateTradeId;
+      long aggregate_trade_id;
       string price;
       string quantity;
-      long firstTradeId;
-      long lastTradeId;
+      long first_trade_id;
+      long last_trade_id;
       long timestamp;
-      bool isBuyerMaker;
-      bool isBestPriceMatch;
+      bool is_buyer_maker;
+      bool is_best_price_match;
     };
 
     void to_json(json& j, const AggTrade& a) {
       j = json{
-        { "a", a.aggregateTradeId },
+        { "a", a.aggregate_trade_id },
         { "p", a.price },
         { "q", a.quantity },
-        { "f", a.firstTradeId },
-        { "l", a.lastTradeId },
+        { "f", a.first_trade_id },
+        { "l", a.last_trade_id },
         { "T", a.timestamp },
-        { "m", a.isBuyerMaker },
-        { "M", a.isBestPriceMatch }
+        { "m", a.is_buyer_maker },
+        { "M", a.is_best_price_match }
       };
     }
 
     void from_json(const json& j, AggTrade& a) {
-      a.aggregateTradeId = j.at("a").get<long>();
+      a.aggregate_trade_id = j.at("a").get<long>();
       a.price = j.at("p").get<string>();
       a.quantity = j.at("q").get<string>();
-      a.firstTradeId = j.at("f").get<long>();
-      a.lastTradeId = j.at("l").get<long>();
+      a.first_trade_id = j.at("f").get<long>();
+      a.last_trade_id = j.at("l").get<long>();
       a.timestamp = j.at("T").get<long>();
-      a.isBuyerMaker = j.at("m").get<bool>();
-      a.isBestPriceMatch = j.at("M").get<bool>();
+      a.is_buyer_maker = j.at("m").get<bool>();
+      a.is_best_price_match = j.at("M").get<bool>();
     }
 
     struct Balance {

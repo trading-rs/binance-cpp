@@ -25,9 +25,9 @@ TEST_CASE("Test Binance market data endpoints") {
   REQUIRE(pre_check());
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 
-  REQUIRE(endpoint->orderBook("LTCBTC").isJust());
-  REQUIRE(endpoint->orderBook("LTCBTC", 5).isJust());
-  REQUIRE(endpoint->orderBook("LTCBTC", Map({{ "limit", "5" }})).isJust());
+  REQUIRE(endpoint->order_book("LTCBTC").isJust());
+  REQUIRE(endpoint->order_book("LTCBTC", 5).isJust());
+  REQUIRE(endpoint->order_book("LTCBTC", Map({{ "limit", "5" }})).isJust());
   REQUIRE(endpoint->agg_trades("LTCBTC").isJust());
   REQUIRE(endpoint->agg_trades("LTCBTC", Map({{ "limit", "5" }})).isJust());
   REQUIRE(endpoint->klines("LTCBTC","5m").isJust());

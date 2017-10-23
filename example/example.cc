@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
       return Maybe<OrderBookEntry>(ob.bids[0]);
     }
   };
-  (endpoint->orderBook("LTCBTC", 5) >>= get_first_bid) >>= print_result<OrderBookEntry>;
+  (endpoint->order_book("LTCBTC", 5) >>= get_first_bid) >>= print_result<OrderBookEntry>;
 
   endpoint->ping() >>= print_result<json>;
   endpoint->time() >>= print_result<long>;
