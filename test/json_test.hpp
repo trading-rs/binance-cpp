@@ -28,3 +28,21 @@ TEST_CASE("Test serialization and deserialization for AggTrade") {
   REQUIRE(ats[0].is_buyer_maker == true);
   REQUIRE(ats[0].is_best_price_match == true);
 }
+
+TEST_CASE("Test serialization and deserialization for CandleStick") {
+  json j = json::parse("[[1499040000000,\"0.01634790\",\"0.80000000\",\"0.01575800\",\"0.01577100\",\"148976.11427815\",1499644799999,\"2434.19055334\",308,\"1756.87402397\",\"28.46694368\",\"17928899.62484339\"]]");
+  vector<CandleStick> css = j;
+  REQUIRE(css.size() == 1);
+  auto cs = css[0];
+  REQUIRE(cs.open_time == 1499040000000);
+  REQUIRE(cs.open == "0.01634790");
+  REQUIRE(cs.high == "0.80000000");
+  REQUIRE(cs.low == "0.01575800");
+  REQUIRE(cs.close == "0.01577100");
+  REQUIRE(cs.volumn == "148976.11427815");
+  REQUIRE(cs.close_time == 1499644799999);
+  REQUIRE(cs.quote_asset_volume == "2434.19055334");
+  REQUIRE(cs.number_of_trades == 308);
+  REQUIRE(cs.taker_buy_base_asset_volume == "1756.87402397");
+  REQUIRE(cs.taker_buy_quote_asset_volume == "28.46694368");
+}

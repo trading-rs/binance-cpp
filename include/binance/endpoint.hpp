@@ -56,6 +56,16 @@ namespace binance {
       }
     };
 
+    function<Maybe<vector<CandleStick>>(json)> get_candlesticks = [](const auto &j) {
+      if (j.is_array()) {
+        vector<CandleStick> cds = j;
+        return Maybe<vector<CandleStick>>(cds);
+      } else {
+        logger->error("{0} is not a json array!", j.dump());
+        return Nothing<vector<CandleStick>>;
+      }
+    };
+
     class Endpoint {
     private:
       shared_ptr<Api> api;
@@ -86,8 +96,8 @@ namespace binance {
          startTime
          endTime
       */
-      auto klines(string symbol, string interval, const Map &options) -> Maybe<json>;
-      auto klines(string symbol, string interval) -> Maybe<json>;
+      auto candlestick_bars(string symbol, string interval, const Map &options) -> Maybe<vector<CandleStick>>;
+      auto candlestick_bars(string symbol, string interval) -> Maybe<vector<CandleStick>>;
       auto ticker_24hr(string symbol) -> Maybe<json>;
       auto ticker_all_prices() -> Maybe<json>;
       auto ticker_all_bool_tickers() -> Maybe<json>;
@@ -164,15 +174,15 @@ namespace binance {
       return this->agg_trades(symbol, Map({}));
     }
 
-    auto Endpoint::klines(string symbol, string interval, const Map &options) -> Maybe<json> {
+    auto Endpoint::candlestick_bars(string symbol, string interval, const Map &options) -> Maybe<vector<CandleStick>> {
       Map params = options;
       params["symbol"] = symbol;
       params["interval"] = interval;
-      return this->api->public_get("/api/v1/klines", params);
+      return this->api->public_get("/api/v1/klines", params) >>= get_candlesticks;
     }
 
-    auto Endpoint::klines(string symbol, string interval) -> Maybe<json> {
-      return this->klines(symbol, interval, Map({}));
+    auto Endpoint::candlestick_bars(string symbol, string interval) -> Maybe<vector<CandleStick>> {
+      return this->candlestick_bars(symbol, interval, Map({}));
     }
 
     auto Endpoint::ticker_24hr(string symbol) -> Maybe<json> {

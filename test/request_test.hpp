@@ -30,8 +30,8 @@ TEST_CASE("Test Binance market data endpoints") {
   REQUIRE(endpoint->order_book("LTCBTC", Map({{ "limit", "5" }})).isJust());
   REQUIRE(endpoint->agg_trades("LTCBTC").isJust());
   REQUIRE(endpoint->agg_trades("LTCBTC", Map({{ "limit", "5" }})).isJust());
-  REQUIRE(endpoint->klines("LTCBTC","5m").isJust());
-  REQUIRE(endpoint->klines("LTCBTC", "5m", Map({{ "limit", "5" }})).isJust());
+  REQUIRE(endpoint->candlestick_bars("LTCBTC","5m").isJust());
+  REQUIRE(endpoint->candlestick_bars("LTCBTC", "5m", Map({{ "limit", "5" }})).isJust());
   REQUIRE(endpoint->ticker_24hr("LTCBTC").isJust());
   REQUIRE(endpoint->ticker_all_prices().isJust());
   REQUIRE(endpoint->ticker_all_bool_tickers().isJust());

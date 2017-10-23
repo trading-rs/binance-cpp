@@ -20,23 +20,14 @@ int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 
-  function<Maybe<AggTrade>(vector<AggTrade>)> get_first_agg_trade = [](const auto &ats) {
-    if (ats.size() == 0) {
-      return Nothing<AggTrade>;
-    } else {
-      return Maybe<AggTrade>(ats[0]);
-    }
-  };
-  (endpoint->agg_trades("LTCBTC") >>= get_first_agg_trade) >>= print_result<AggTrade>;
+  (endpoint->candlestick_bars("LTCBTC", "5m") >>= head_m<CandleStick>) >>= print_result<CandleStick>;
 
-  function<Maybe<OrderBookEntry>(OrderBook)> get_first_bid = [](const auto &ob) {
-    if (ob.bids.size() == 0) {
-      return Nothing<OrderBookEntry>;
-    } else {
-      return Maybe<OrderBookEntry>(ob.bids[0]);
-    }
+  (endpoint->agg_trades("LTCBTC") >>= head_m<AggTrade>) >>= print_result<AggTrade>;
+
+  function<Maybe<vector<OrderBookEntry>>(OrderBook)> get_bids = [](const auto &ob) {
+    return Maybe<vector<OrderBookEntry>>(ob.bids);
   };
-  (endpoint->order_book("LTCBTC", 5) >>= get_first_bid) >>= print_result<OrderBookEntry>;
+  ((endpoint->order_book("LTCBTC", 5) >>= get_bids) >>= head_m<OrderBookEntry>) >>= print_result<OrderBookEntry>;
 
   endpoint->ping() >>= print_result<json>;
   endpoint->time() >>= print_result<long>;
