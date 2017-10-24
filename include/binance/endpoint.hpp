@@ -6,7 +6,7 @@ using namespace binance::api;
 #include "websocket_client.hpp"
 using namespace binance::websocket_client;
 
-#include "types.hpp"
+#include "types/types.hpp"
 using namespace binance::types;
 
 #ifndef FORMAT_HEADER

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "types/types.hpp"
 using namespace binance::types;
 
 #include <json.hpp>
