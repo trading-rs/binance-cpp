@@ -66,6 +66,31 @@ namespace binance {
       }
     };
 
+    function<Maybe<TickerStatistics>(json)> get_tickerstats = [](const auto &j) {
+      if (j["priceChange"] != nullptr
+          && j["priceChangePercent"] != nullptr
+          && j["weightedAvgPrice"] != nullptr
+          && j["prevClosePrice"] != nullptr
+          && j["lastPrice"] != nullptr
+          && j["bidPrice"] != nullptr
+          && j["askPrice"] != nullptr
+          && j["openPrice"] != nullptr
+          && j["highPrice"] != nullptr
+          && j["lowPrice"] != nullptr
+          && j["volume"] != nullptr
+          && j["openTime"] != nullptr
+          && j["closeTime"] != nullptr
+          && j["firstId"] != nullptr
+          && j["lastId"] != nullptr
+          && j["count"] != nullptr) {
+        TickerStatistics ts = j;
+        return Maybe<TickerStatistics>(ts);
+      } else {
+        logger->error("{0} is missing fields as a ticker statistics data!", j.dump());
+        return Nothing<TickerStatistics>;
+      }
+    };
+
     class Endpoint {
     private:
       shared_ptr<Api> api;
@@ -98,7 +123,7 @@ namespace binance {
       */
       auto candlestick_bars(string symbol, string interval, const Map &options) -> Maybe<vector<CandleStick>>;
       auto candlestick_bars(string symbol, string interval) -> Maybe<vector<CandleStick>>;
-      auto ticker_24hr(string symbol) -> Maybe<json>;
+      auto ticker_24hr(string symbol) -> Maybe<TickerStatistics>;
       auto ticker_all_prices() -> Maybe<json>;
       auto ticker_all_bool_tickers() -> Maybe<json>;
       auto order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<json>;
@@ -185,8 +210,8 @@ namespace binance {
       return this->candlestick_bars(symbol, interval, Map({}));
     }
 
-    auto Endpoint::ticker_24hr(string symbol) -> Maybe<json> {
-      return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }}));
+    auto Endpoint::ticker_24hr(string symbol) -> Maybe<TickerStatistics> {
+      return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }})) >>= get_tickerstats;
     }
 
     auto Endpoint::ticker_all_prices() -> Maybe<json> {

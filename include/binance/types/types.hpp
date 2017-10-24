@@ -4,3 +4,4 @@
 #include "agg_trade.hpp"
 #include "candle_stick.hpp"
 #include "balance.hpp"
+#include "ticker_statistics.hpp"

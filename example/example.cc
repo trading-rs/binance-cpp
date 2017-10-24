@@ -5,6 +5,7 @@ using namespace binance::extra;
 
 #include <memory>
 #include <utility>
+#include <string>
 #include <iostream>
 using namespace std;
 
@@ -19,6 +20,13 @@ auto pre_check() {
 int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
+
+  function<string(TickerStatistics)> get_last_price = [](const auto &ts) {
+    return ts.last_price;
+  };
+  (endpoint->ticker_24hr("LTCBTC") ^ get_last_price) >>= print_result<string>;
+
+  endpoint->ticker_24hr("LTCBTC") >>= print_result<TickerStatistics>;
 
   (endpoint->candlestick_bars("LTCBTC", "5m") >>= head_m<CandleStick>) >>= print_result<CandleStick>;
 

@@ -1,6 +1,8 @@
 ## Create a new endpoint client
 
 ```C++
+#include <binance/binance.hpp>
+using namespace binance::endpoint;
 auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 ```
 
@@ -40,3 +42,12 @@ function<Maybe<vector<OrderBookEntry>>(OrderBook)> get_bids = [](const auto &ob)
 (endpoint->candlestick_bars("LTCBTC", "5m") >>= head_m<CandleStick>) >>= print_result<CandleStick>;
 ```
 <details><summary>View Output</summary><pre>open_time = 1508712000000, open = 0.00948600, high = 0.00948600, low = 0.00947000, close = 0.00947000, volumn = 146.69000000, close_time = 1508712299999, quote_asset_volumn = 1.39052521, number_of_trades = 28, taker_buy_base_asset_volume = 18.46000000, taker_buy_quote_asset_volume = 0.17494542</pre></details>
+
+#### Latest price of a symbol
+```C++
+function<string(TickerStatistics)> get_last_price = [](const auto &ts) {
+  return ts.last_price;
+};
+(endpoint->ticker_24hr("LTCBTC") ^ get_last_price) >>= print_result<string>;
+```
+<details><summary>View Output</summary><pre>0.01004900</pre></details>

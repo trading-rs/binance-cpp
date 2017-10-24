@@ -35,6 +35,11 @@ namespace binance {
       return Nothing<json>;
     };
     template <>
+    function<Maybe<json>(string)> print_result<string> = [](const auto &result) {
+      cout << result << endl;
+      return Nothing<json>;
+    };
+    template <>
     function<Maybe<json>(OrderBookEntry)> print_result<OrderBookEntry> = [](const auto &result) {
       cout << result.price << " - " << result.qty << endl;
       return Nothing<json>;
@@ -66,6 +71,27 @@ namespace binance {
                      result.number_of_trades,
                      result.taker_buy_base_asset_volume,
                      result.taker_buy_quote_asset_volume) << endl;
+      return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(TickerStatistics)> print_result<TickerStatistics> = [](const auto &result) {
+      cout << format("priceChange = {0}, priceChangePercent = {1}, weightedAvgPrice = {2}, prevClosePrice = {3}, lastPrice = {4}, bidPrice = {5}, askPrice = {6}, openPrice = {7}, highPrice = {8}, lowPrice = {9}, volume= {10}, openTime = {11}, closeTime = {12}, firstId = {13}, lastId = {14}, count = {15}",
+                     result.price_change,
+                     result.price_change_percent,
+                     result.weighted_avg_price,
+                     result.prev_close_price,
+                     result.last_price,
+                     result.bid_price,
+                     result.ask_price,
+                     result.open_price,
+                     result.high_price,
+                     result.low_price,
+                     result.volume,
+                     result.open_time,
+                     result.close_time,
+                     result.first_id,
+                     result.last_id,
+                     result.count) << endl;
       return Nothing<json>;
     };
   }
