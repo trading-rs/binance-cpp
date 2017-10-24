@@ -124,8 +124,8 @@ namespace binance {
       auto candlestick_bars(string symbol, string interval, const Map &options) -> Maybe<vector<CandleStick>>;
       auto candlestick_bars(string symbol, string interval) -> Maybe<vector<CandleStick>>;
       auto ticker_24hr(string symbol) -> Maybe<TickerStatistics>;
-      auto ticker_all_prices() -> Maybe<json>;
-      auto ticker_all_bool_tickers() -> Maybe<json>;
+      auto all_prices() -> Maybe<json>;
+      auto all_book_tickers() -> Maybe<json>;
       auto order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<json>;
       auto order(string side, string type, string symbol, double quantity) -> Maybe<json>;
       auto buy_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<json>;
@@ -214,11 +214,11 @@ namespace binance {
       return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }})) >>= get_tickerstats;
     }
 
-    auto Endpoint::ticker_all_prices() -> Maybe<json> {
+    auto Endpoint::all_prices() -> Maybe<json> {
       return this->api->public_get("/api/v1/ticker/allPrices");
     }
 
-    auto Endpoint::ticker_all_bool_tickers() -> Maybe<json> {
+    auto Endpoint::all_book_tickers() -> Maybe<json> {
       return this->api->public_get("/api/v1/ticker/allBookTickers");
     }
 
