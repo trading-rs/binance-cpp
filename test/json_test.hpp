@@ -129,3 +129,21 @@ TEST_CASE("Test deserialization for CancelOrderResponse") {
   REQUIRE(cop.client_order_id == "cancelMyOrder1");
   REQUIRE(cop.orig_client_order_id == "myOrder1");
 }
+
+TEST_CASE("Test deserialization for Account") {
+  json j = json::parse("{\"makerCommission\":15,\"takerCommission\":15,\"buyerCommission\":0,\"sellerCommission\":0,\"canTrade\":true,\"canWithdraw\":true,\"canDeposit\":true,\"balances\":[{\"asset\":\"BTC\",\"free\":\"4723846.89208129\",\"locked\":\"0.00000000\"},{\"asset\":\"LTC\",\"free\":\"4763368.68006011\",\"locked\":\"0.00000000\"}]}");
+  Account a = j;
+  vector<Balance> balances_expected = {
+    Balance({ "BTC", "4723846.89208129", "0.00000000" }),
+    Balance({ "LTC", "4763368.68006011", "0.00000000" })
+  };
+  REQUIRE(a.maker_commission == 15);
+  REQUIRE(a.taker_commission == 15);
+  REQUIRE(a.buyer_commission == 0);
+  REQUIRE(a.seller_commission == 0);
+  REQUIRE(a.can_trade == true);
+  REQUIRE(a.can_withdraw == true);
+  REQUIRE(a.can_deposit == true);
+  REQUIRE(a.balances.size() == 2);
+  REQUIRE(a.balances == balances_expected);
+}
