@@ -263,3 +263,40 @@ endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<NewOrderResponse>;
 symbol = ETHBTC, orderId = 1321312, clientOrderId = XXXXXfc2XXzTXXGs66ZcXX, transactTime = 1508382322725
 </pre>
 </details>
+
+#### Get order status
+```C++
+endpoint->order_status("ETHBTC", 13151) >>= print_result<Order>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+</pre>
+</details>
+
+#### Get account open orders for a symbol
+```C++
+endpoint->open_orders("ETHBTC") >>= print_results<Order>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+</pre>
+</details>
+
+#### Get all account orders; active, canceled, or filled
+```C++
+endpoint->all_orders("ETHBTC") >>= print_results<Order>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+</pre>
+</details>

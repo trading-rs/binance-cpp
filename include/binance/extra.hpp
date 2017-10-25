@@ -120,6 +120,24 @@ namespace binance {
                      result.transact_time) << endl;
       return Nothing<json>;
     };
+    template <>
+    function<Maybe<json>(Order)> print_result<Order> = [](const auto &result) {
+      cout << format("symbol = {0}, orderId = {1}, clientOrderId = {2}, price = {3}, origQty = {4}, executedQty = {5}, status = {6}, timeInForce = {7}, type = {8}, side = {9}, stopPrice = {10}, icebergQty = {11}, time = {12}",
+                     result.symbol,
+                     result.order_id,
+                     result.client_order_id,
+                     result.price,
+                     result.orig_qty,
+                     result.executed_qty,
+                     result.status,
+                     result.time_in_force,
+                     result.type,
+                     result.side,
+                     result.stop_price,
+                     result.iceberg_qty,
+                     result.time) << endl;
+      return Nothing<json>;
+    };
 
     template <typename T>
     function<Maybe<json>(vector<T>)> print_results = [](const vector<T> &results) {

@@ -106,16 +106,16 @@ namespace binance {
       auto sell_limit(string symbol, double quantity, double price) -> Maybe<NewOrderResponse>;
       auto sell_market(string symbol, double quantity, const Map &options) -> Maybe<NewOrderResponse>;
       auto sell_market(string symbol, double quantity) -> Maybe<NewOrderResponse>;
-      auto order_status(string symbol, string order_id) -> Maybe<json>;
-      auto cancle_order(string symbol, string order_id) -> Maybe<json>;
-      auto open_orders(string symbol) -> Maybe<json>;
+      auto order_status(string symbol, long order_id) -> Maybe<Order>;
+      auto cancle_order(string symbol, long order_id) -> Maybe<json>;
+      auto open_orders(string symbol) -> Maybe<vector<Order>>;
       /**
          @options:
          orderId: If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned
          limit: Default 500; max 500
       */
-      auto all_orders(string symbol, const Map &options) -> Maybe<json>;
-      auto all_orders(string symbol) -> Maybe<json>;
+      auto all_orders(string symbol, const Map &options) -> Maybe<vector<Order>>;
+      auto all_orders(string symbol) -> Maybe<vector<Order>>;
       auto my_account() -> Maybe<json>;
       /**
          @options:
@@ -244,35 +244,35 @@ namespace binance {
       return this->sell_market(symbol, quantity, Map({}));
     }
 
-    auto Endpoint::order_status(string symbol, string order_id) -> Maybe<json> {
+    auto Endpoint::order_status(string symbol, long order_id) -> Maybe<Order> {
       const Map &params = {
         { "symbol", symbol },
-        { "orderId", order_id }
+        { "orderId", format("{}", order_id) }
       };
 
-      return this->api->signed_get("/api/v3/order", params);
+      return this->api->signed_get("/api/v3/order", params) >>= get_data<Order>;
     }
 
-    auto Endpoint::cancle_order(string symbol, string order_id) -> Maybe<json> {
+    auto Endpoint::cancle_order(string symbol, long order_id) -> Maybe<json> {
       const Map &params = {
         { "symbol", symbol },
-        { "orderId", order_id }
+        { "orderId", format("{}", order_id) }
       };
 
       return this->api->signed_delete("/api/v3/order", params);
     }
 
-    auto Endpoint::open_orders(string symbol) -> Maybe<json> {
-      return this->api->signed_get("/api/v3/openOrders", Map({{ "symbol", symbol }}));
+    auto Endpoint::open_orders(string symbol) -> Maybe<vector<Order>> {
+      return this->api->signed_get("/api/v3/openOrders", Map({{ "symbol", symbol }})) >>= get_datas<Order>;
     }
 
-    auto Endpoint::all_orders(string symbol, const Map &options) -> Maybe<json> {
+    auto Endpoint::all_orders(string symbol, const Map &options) -> Maybe<vector<Order>> {
       Map params = options;
       params["symbol"] = symbol;
-      return this->api->signed_get("/api/v3/allOrders", params);
+      return this->api->signed_get("/api/v3/allOrders", params) >>= get_datas<Order>;
     }
 
-    auto Endpoint::all_orders(string symbol) -> Maybe<json> {
+    auto Endpoint::all_orders(string symbol) -> Maybe<vector<Order>> {
       return this->all_orders(symbol, Map({}));
     }
 

@@ -45,8 +45,10 @@ int main(int argc, char** argv) {
   endpoint->time() >>= print_result<long>;
   endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<NewOrderResponse>;
   endpoint->buy_market("ETHBTC", 1.0) >>= print_result<NewOrderResponse>;
-  endpoint->order_status("ETHBTC", "1") >>= print_result<json>;
-  endpoint->cancle_order("ETHBTC", "1") >>= print_result<json>;
+  endpoint->order_status("ETHBTC", 13151) >>= print_result<Order>;
+  endpoint->open_orders("ETHBTC") >>= print_results<Order>;
+  endpoint->all_orders("ETHBTC") >>= print_results<Order>;
+  endpoint->cancle_order("ETHBTC", 13151) >>= print_result<json>;
 
   endpoint->depth_websocket("ethbtc",  [](json data) {
       cout << data.dump(2) << endl;
