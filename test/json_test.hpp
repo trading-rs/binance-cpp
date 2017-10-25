@@ -102,3 +102,21 @@ TEST_CASE("Test serialization and deserialization for NewOrderResponse") {
   REQUIRE(nor.client_order_id == "myOrder1");
   REQUIRE(nor.transact_time == 1499827319559);
 }
+
+TEST_CASE("Test serialization and deserialization for Order") {
+  json j = json::parse("{\"symbol\":\"LTCBTC\",\"orderId\":1,\"clientOrderId\":\"myOrder1\",\"price\":\"0.1\",\"origQty\":\"1.0\",\"executedQty\":\"0.0\",\"status\":\"NEW\",\"timeInForce\":\"GTC\",\"type\":\"LIMIT\",\"side\":\"BUY\",\"stopPrice\":\"0.0\",\"icebergQty\":\"0.0\",\"time\":1499827319559}");
+  Order o = j;
+  REQUIRE(o.symbol == "LTCBTC");
+  REQUIRE(o.order_id == 1);
+  REQUIRE(o.client_order_id == "myOrder1");
+  REQUIRE(o.price == "0.1");
+  REQUIRE(o.orig_qty == "1.0");
+  REQUIRE(o.executed_qty == "0.0");
+  REQUIRE(o.status == "NEW");
+  REQUIRE(o.time_in_force == "GTC");
+  REQUIRE(o.type == "LIMIT");
+  REQUIRE(o.side == "BUY");
+  REQUIRE(o.stop_price == "0.0");
+  REQUIRE(o.iceberg_qty == "0.0");
+  REQUIRE(o.time == 1499827319559);
+}

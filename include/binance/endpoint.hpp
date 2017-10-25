@@ -25,7 +25,7 @@ namespace binance {
     shared_ptr<spd::logger> logger = spd::stdout_color_mt("ENDPOINT");
 
     template <typename T>
-    function<Maybe<vector<T>>(json)> get_datas = [](const json &j) {
+    function<Maybe<vector<T>>(json)> get_datas = [](const auto &j) {
       if (j.is_array()) {
         vector<T> ats = j;
         return Maybe<vector<T>>(ats);
@@ -35,17 +35,10 @@ namespace binance {
       }
     };
 
-    function<Maybe<NewOrderResponse>(json)> get_new_order_response = [](const auto &j) {
-      if (j["symbol"] != nullptr
-          && j["orderId"] != nullptr
-          && j["clientOrderId"] != nullptr
-          && j["transactTime"] != nullptr) {
-        NewOrderResponse nor = j;
-        return Maybe<NewOrderResponse>(nor);
-      } else {
-        logger->error("{0} is missing fields as a new order response data!", j.dump());
-        return Nothing<NewOrderResponse>;
-      }
+    template <typename T>
+    function<T(json)> get_data = [](const auto &j) {
+      T data = j;
+      return data;
     };
 
     function<Maybe<long>(json)> get_server_time = [](const auto &j) {
@@ -55,43 +48,6 @@ namespace binance {
       } else {
         logger->error("{0} does not contain `serverTime` property!", j.dump());
         return Nothing<long>;
-      }
-    };
-
-    function<Maybe<OrderBook>(json)> get_order_book = [](const auto &j) {
-      if (j["lastUpdateId"] != nullptr
-          && j["bids"] != nullptr
-          && j["asks"] != nullptr) {
-        OrderBook ob = j;
-        return Maybe<OrderBook>(ob);
-      } else {
-        logger->error("{0} does not contain `lastUpdateId` or `bids` or `asks` property!", j.dump());
-        return Nothing<OrderBook>;
-      }
-    };
-
-    function<Maybe<TickerStatistics>(json)> get_tickerstats = [](const auto &j) {
-      if (j["priceChange"] != nullptr
-          && j["priceChangePercent"] != nullptr
-          && j["weightedAvgPrice"] != nullptr
-          && j["prevClosePrice"] != nullptr
-          && j["lastPrice"] != nullptr
-          && j["bidPrice"] != nullptr
-          && j["askPrice"] != nullptr
-          && j["openPrice"] != nullptr
-          && j["highPrice"] != nullptr
-          && j["lowPrice"] != nullptr
-          && j["volume"] != nullptr
-          && j["openTime"] != nullptr
-          && j["closeTime"] != nullptr
-          && j["firstId"] != nullptr
-          && j["lastId"] != nullptr
-          && j["count"] != nullptr) {
-        TickerStatistics ts = j;
-        return Maybe<TickerStatistics>(ts);
-      } else {
-        logger->error("{0} is missing fields as a ticker statistics data!", j.dump());
-        return Nothing<TickerStatistics>;
       }
     };
 
@@ -182,7 +138,7 @@ namespace binance {
     auto Endpoint::order_book(string symbol, const Map &options) -> Maybe<OrderBook> {
       Map params = options;
       params["symbol"] = symbol;
-      return this->api->public_get("/api/v1/depth", params) >>= get_order_book;
+      return this->api->public_get("/api/v1/depth", params) ^ get_data<OrderBook>;
     }
 
     auto Endpoint::order_book(string symbol, int limit) -> Maybe<OrderBook> {
@@ -215,7 +171,7 @@ namespace binance {
     }
 
     auto Endpoint::ticker_24hr(string symbol) -> Maybe<TickerStatistics> {
-      return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }})) >>= get_tickerstats;
+      return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }})) ^ get_data<TickerStatistics>;
     }
 
     auto Endpoint::all_prices() -> Maybe<vector<TickerPrice>> {
@@ -235,7 +191,7 @@ namespace binance {
       if (type == "LIMIT") {
         params["timeInForce"] = "GTC";
       }
-      return this->api->signed_post("/api/v3/order", params) >>= get_new_order_response;
+      return this->api->signed_post("/api/v3/order", params) ^ get_data<NewOrderResponse>;
     }
 
     auto Endpoint::order(string side, string type, string symbol, double quantity) -> Maybe<NewOrderResponse> {
