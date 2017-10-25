@@ -94,5 +94,20 @@ namespace binance {
                      result.count) << endl;
       return Nothing<json>;
     };
+    template <>
+    function<Maybe<json>(TickerPrice)> print_result<TickerPrice> = [](const auto &result) {
+      cout << format("symbol = {0}, price = {1}",
+                     result.symbol,
+                     result.price) << endl;
+      return Nothing<json>;
+    };
+
+    template <typename T>
+    function<Maybe<json>(vector<T>)> print_results = [](const vector<T> &results) {
+      std::for_each(results.cbegin(), results.cend(), [&](const T &result) {
+          print_result<T>(result);
+        });
+      return Nothing<json>;
+    };
   }
 }

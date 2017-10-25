@@ -21,6 +21,8 @@ int main(int argc, char** argv) {
   pre_check();
   auto endpoint = make_shared<Endpoint>(api_key, api_secret);
 
+  endpoint->all_prices() >>= print_results<TickerPrice>;
+
   function<string(TickerStatistics)> get_last_price = [](const auto &ts) {
     return ts.last_price;
   };

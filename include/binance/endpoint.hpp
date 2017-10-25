@@ -91,6 +91,16 @@ namespace binance {
       }
     };
 
+    function<Maybe<vector<TickerPrice>>(json)> get_ticker_prices = [](const auto &j) {
+      if (j.is_array()) {
+        vector<TickerPrice> tps = j;
+        return Maybe<vector<TickerPrice>>(tps);
+      } else {
+        logger->error("{0} is not a json array!", j.dump());
+        return Nothing<vector<TickerPrice>>;
+      }
+    };
+
     class Endpoint {
     private:
       shared_ptr<Api> api;
@@ -124,7 +134,7 @@ namespace binance {
       auto candlestick_bars(string symbol, string interval, const Map &options) -> Maybe<vector<CandleStick>>;
       auto candlestick_bars(string symbol, string interval) -> Maybe<vector<CandleStick>>;
       auto ticker_24hr(string symbol) -> Maybe<TickerStatistics>;
-      auto all_prices() -> Maybe<json>;
+      auto all_prices() -> Maybe<vector<TickerPrice>>;
       auto all_book_tickers() -> Maybe<json>;
       auto order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<json>;
       auto order(string side, string type, string symbol, double quantity) -> Maybe<json>;
@@ -214,8 +224,8 @@ namespace binance {
       return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }})) >>= get_tickerstats;
     }
 
-    auto Endpoint::all_prices() -> Maybe<json> {
-      return this->api->public_get("/api/v1/ticker/allPrices");
+    auto Endpoint::all_prices() -> Maybe<vector<TickerPrice>> {
+      return this->api->public_get("/api/v1/ticker/allPrices") >>= get_ticker_prices;
     }
 
     auto Endpoint::all_book_tickers() -> Maybe<json> {

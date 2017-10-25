@@ -5,3 +5,4 @@
 #include "candle_stick.hpp"
 #include "balance.hpp"
 #include "ticker_statistics.hpp"
+#include "ticker_price.hpp"

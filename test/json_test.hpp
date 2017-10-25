@@ -46,3 +46,4 @@ TEST_CASE("Test serialization and deserialization for CandleStick") {
   REQUIRE(cs.taker_buy_base_asset_volume == "1756.87402397");
   REQUIRE(cs.taker_buy_quote_asset_volume == "28.46694368");
 }
+
