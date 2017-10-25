@@ -27,8 +27,13 @@ namespace binance {
     template <typename T>
     function<Maybe<vector<T>>(json)> get_datas = [](const auto &j) {
       if (j.is_array()) {
-        vector<T> ats = j;
-        return Maybe<vector<T>>(ats);
+        try {
+          vector<T> datas = j;
+          return Maybe<vector<T>>(datas);
+        } catch (const std::exception& e) {
+          logger->error("{0} when parsing {1}", e.what(), j.dump());
+          return Nothing<vector<T>>;
+        }
       } else {
         logger->error("{0} is not a json array!", j.dump());
         return Nothing<vector<T>>;
@@ -36,9 +41,14 @@ namespace binance {
     };
 
     template <typename T>
-    function<T(json)> get_data = [](const auto &j) {
-      T data = j;
-      return data;
+    function<Maybe<T>(json)> get_data = [](const auto &j) {
+      try {
+        T data = j;
+        return Maybe<T>(data);
+      } catch (const std::exception& e) {
+        logger->error("{0} when parsing {1}", e.what(), j.dump());
+        return Nothing<T>;
+      }
     };
 
     function<Maybe<long>(json)> get_server_time = [](const auto &j) {
@@ -138,7 +148,7 @@ namespace binance {
     auto Endpoint::order_book(string symbol, const Map &options) -> Maybe<OrderBook> {
       Map params = options;
       params["symbol"] = symbol;
-      return this->api->public_get("/api/v1/depth", params) ^ get_data<OrderBook>;
+      return this->api->public_get("/api/v1/depth", params) >>= get_data<OrderBook>;
     }
 
     auto Endpoint::order_book(string symbol, int limit) -> Maybe<OrderBook> {
@@ -171,7 +181,7 @@ namespace binance {
     }
 
     auto Endpoint::ticker_24hr(string symbol) -> Maybe<TickerStatistics> {
-      return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }})) ^ get_data<TickerStatistics>;
+      return this->api->public_get("/api/v1/ticker/24hr", Map({{ "symbol", symbol }})) >>= get_data<TickerStatistics>;
     }
 
     auto Endpoint::all_prices() -> Maybe<vector<TickerPrice>> {
@@ -191,7 +201,7 @@ namespace binance {
       if (type == "LIMIT") {
         params["timeInForce"] = "GTC";
       }
-      return this->api->signed_post("/api/v3/order", params) ^ get_data<NewOrderResponse>;
+      return this->api->signed_post("/api/v3/order", params) >>= get_data<NewOrderResponse>;
     }
 
     auto Endpoint::order(string side, string type, string symbol, double quantity) -> Maybe<NewOrderResponse> {
