@@ -271,7 +271,7 @@ endpoint->order_status("ETHBTC", 13151) >>= print_result<Order>;
 <details>
 <summary>View Output</summary>
 <pre>
-symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, price = 0.00010000, origQty = 1000.00000000, executedQty = 0.00000000, status = NEW, timeInForce = GTC, type = LIMIT, side = BUY, stopPrice = 0.00000000, icebergQty = 0.00000000, time = 1508382291552
 </pre>
 </details>
 
@@ -282,9 +282,9 @@ endpoint->open_orders("ETHBTC") >>= print_results<Order>;
 <details>
 <summary>View Output</summary>
 <pre>
-symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
-symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
-symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, price = 0.00010000, origQty = 1000.00000000, executedQty = 0.00000000, status = NEW, timeInForce = GTC, type = LIMIT, side = BUY, stopPrice = 0.00000000, icebergQty = 0.00000000, time = 1508382291552
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, price = 0.00010000, origQty = 1000.00000000, executedQty = 0.00000000, status = NEW, timeInForce = GTC, type = LIMIT, side = BUY, stopPrice = 0.00000000, icebergQty = 0.00000000, time = 1508382291552
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, price = 0.00010000, origQty = 1000.00000000, executedQty = 0.00000000, status = NEW, timeInForce = GTC, type = LIMIT, side = BUY, stopPrice = 0.00000000, icebergQty = 0.00000000, time = 1508382291552
 </pre>
 </details>
 
@@ -295,8 +295,19 @@ endpoint->all_orders("ETHBTC") >>= print_results<Order>;
 <details>
 <summary>View Output</summary>
 <pre>
-symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
-symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
-symbol=LINKETH, orderId=12345, clientOrderId=XYZ, price=0.00010000, origQty=1000.00000000, executedQty=0.00000000, status=NEW, timeInForce=GTC, type=LIMIT, side=BUY, stopPrice=0.00000000, icebergQty=0.00000000, time=1508382291552
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, price = 0.00010000, origQty = 1000.00000000, executedQty = 0.00000000, status = NEW, timeInForce = GTC, type = LIMIT, side = BUY, stopPrice = 0.00000000, icebergQty = 0.00000000, time = 1508382291552
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, price = 0.00010000, origQty = 1000.00000000, executedQty = 0.00000000, status = NEW, timeInForce = GTC, type = LIMIT, side = BUY, stopPrice = 0.00000000, icebergQty = 0.00000000, time = 1508382291552
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, price = 0.00010000, origQty = 1000.00000000, executedQty = 0.00000000, status = NEW, timeInForce = GTC, type = LIMIT, side = BUY, stopPrice = 0.00000000, icebergQty = 0.00000000, time = 1508382291552
+</pre>
+</details>
+
+#### Canceling an order
+```C++
+endpoint->cancel_order("ETHBTC", 13151) >>= print_result<CancelOrderResponse>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, origClientOrderId = THXAS
 </pre>
 </details>

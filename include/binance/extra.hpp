@@ -138,6 +138,15 @@ namespace binance {
                      result.time) << endl;
       return Nothing<json>;
     };
+    template <>
+    function<Maybe<json>(CancelOrderResponse)> print_result<CancelOrderResponse> = [](const auto &result) {
+      cout << format("symbol = {0}, orderId = {1}, clientOrderId = {2}, origClientOrderId = {3}",
+                     result.symbol,
+                     result.order_id,
+                     result.client_order_id,
+                     result.orig_client_order_id) << endl;
+      return Nothing<json>;
+    };
 
     template <typename T>
     function<Maybe<json>(vector<T>)> print_results = [](const vector<T> &results) {

@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
   endpoint->order_status("ETHBTC", 13151) >>= print_result<Order>;
   endpoint->open_orders("ETHBTC") >>= print_results<Order>;
   endpoint->all_orders("ETHBTC") >>= print_results<Order>;
-  endpoint->cancle_order("ETHBTC", 13151) >>= print_result<json>;
+  endpoint->cancel_order("ETHBTC", 13151) >>= print_result<CancelOrderResponse>;
 
   endpoint->depth_websocket("ethbtc",  [](json data) {
       cout << data.dump(2) << endl;

@@ -107,7 +107,7 @@ namespace binance {
       auto sell_market(string symbol, double quantity, const Map &options) -> Maybe<NewOrderResponse>;
       auto sell_market(string symbol, double quantity) -> Maybe<NewOrderResponse>;
       auto order_status(string symbol, long order_id) -> Maybe<Order>;
-      auto cancle_order(string symbol, long order_id) -> Maybe<json>;
+      auto cancel_order(string symbol, long order_id) -> Maybe<CancelOrderResponse>;
       auto open_orders(string symbol) -> Maybe<vector<Order>>;
       /**
          @options:
@@ -253,13 +253,13 @@ namespace binance {
       return this->api->signed_get("/api/v3/order", params) >>= get_data<Order>;
     }
 
-    auto Endpoint::cancle_order(string symbol, long order_id) -> Maybe<json> {
+    auto Endpoint::cancel_order(string symbol, long order_id) -> Maybe<CancelOrderResponse> {
       const Map &params = {
         { "symbol", symbol },
         { "orderId", format("{}", order_id) }
       };
 
-      return this->api->signed_delete("/api/v3/order", params);
+      return this->api->signed_delete("/api/v3/order", params) >>= get_data<CancelOrderResponse>;
     }
 
     auto Endpoint::open_orders(string symbol) -> Maybe<vector<Order>> {

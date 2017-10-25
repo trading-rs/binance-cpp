@@ -120,3 +120,12 @@ TEST_CASE("Test serialization and deserialization for Order") {
   REQUIRE(o.iceberg_qty == "0.0");
   REQUIRE(o.time == 1499827319559);
 }
+
+TEST_CASE("Test serialization and deserialization for CancelOrderResponse") {
+  json j = json::parse("{\"symbol\":\"LTCBTC\",\"origClientOrderId\":\"myOrder1\",\"orderId\":1,\"clientOrderId\":\"cancelMyOrder1\"}");
+  CancelOrderResponse cop = j;
+  REQUIRE(cop.symbol == "LTCBTC");
+  REQUIRE(cop.order_id == 1);
+  REQUIRE(cop.client_order_id == "cancelMyOrder1");
+  REQUIRE(cop.orig_client_order_id == "myOrder1");
+}
