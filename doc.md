@@ -239,3 +239,27 @@ symbol = BTGBTC, bidPrice = 0.03300000, bidQty = 0.30000000, askPrice = 0.033791
 symbol = BTGETH, bidPrice = 0.61000000, bidQty = 0.40000000, askPrice = 0.66447300, askQty = 0.60000000
 </pre>
 </details>
+
+### Account Data endpoints
+
+#### Placing a MARKET order
+```C++
+endpoint->buy_market("ETHBTC", 1.0) >>= print_result<NewOrderResponse>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+symbol = ETHBTC, orderId = 1321312, clientOrderId = XXXXXfc2XXzTXXGs66ZcXX, transactTime = 1508382322725
+</pre>
+</details>
+
+#### Placing a LIMIT order
+```C++
+endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<NewOrderResponse>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+symbol = ETHBTC, orderId = 1321312, clientOrderId = XXXXXfc2XXzTXXGs66ZcXX, transactTime = 1508382322725
+</pre>
+</details>

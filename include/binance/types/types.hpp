@@ -7,3 +7,4 @@
 #include "ticker_statistics.hpp"
 #include "ticker_price.hpp"
 #include "book_ticker.hpp"
+#include "new_order_response.hpp"

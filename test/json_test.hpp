@@ -93,3 +93,12 @@ TEST_CASE("Test serialization and deserialization for BookTicker") {
   REQUIRE(bts[1].ask_price == "100000.00000000");
   REQUIRE(bts[1].ask_qty == "1000.00000000");
 }
+
+TEST_CASE("Test serialization and deserialization for NewOrderResponse") {
+  json j = json::parse("{\"symbol\":\"LTCBTC\",\"orderId\":1,\"clientOrderId\":\"myOrder1\",\"transactTime\":1499827319559}");
+  NewOrderResponse nor = j;
+  REQUIRE(nor.symbol == "LTCBTC");
+  REQUIRE(nor.order_id == 1);
+  REQUIRE(nor.client_order_id == "myOrder1");
+  REQUIRE(nor.transact_time == 1499827319559);
+}

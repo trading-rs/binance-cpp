@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
 
   endpoint->ping() >>= print_result<json>;
   endpoint->time() >>= print_result<long>;
-  endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<json>;
-  endpoint->buy_market("ETHBTC", 1.0) >>= print_result<json>;
+  endpoint->buy_limit("ETHBTC", 1.0, 0.069) >>= print_result<NewOrderResponse>;
+  endpoint->buy_market("ETHBTC", 1.0) >>= print_result<NewOrderResponse>;
   endpoint->order_status("ETHBTC", "1") >>= print_result<json>;
   endpoint->cancle_order("ETHBTC", "1") >>= print_result<json>;
 

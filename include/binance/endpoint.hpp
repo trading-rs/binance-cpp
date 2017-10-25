@@ -35,6 +35,19 @@ namespace binance {
       }
     };
 
+    function<Maybe<NewOrderResponse>(json)> get_new_order_response = [](const auto &j) {
+      if (j["symbol"] != nullptr
+          && j["orderId"] != nullptr
+          && j["clientOrderId"] != nullptr
+          && j["transactTime"] != nullptr) {
+        NewOrderResponse nor = j;
+        return Maybe<NewOrderResponse>(nor);
+      } else {
+        logger->error("{0} is missing fields as a new order response data!", j.dump());
+        return Nothing<NewOrderResponse>;
+      }
+    };
+
     function<Maybe<long>(json)> get_server_time = [](const auto &j) {
       auto st = j["serverTime"];
       if (st != nullptr) {
@@ -117,16 +130,16 @@ namespace binance {
       auto ticker_24hr(string symbol) -> Maybe<TickerStatistics>;
       auto all_prices() -> Maybe<vector<TickerPrice>>;
       auto all_book_tickers() -> Maybe<vector<BookTicker>>;
-      auto order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<json>;
-      auto order(string side, string type, string symbol, double quantity) -> Maybe<json>;
-      auto buy_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<json>;
-      auto buy_limit(string symbol, double quantity, double price) -> Maybe<json>;
-      auto buy_market(string symbol, double quantity,const Map &options) -> Maybe<json>;
-      auto buy_market(string symbol, double quantity) -> Maybe<json>;
-      auto sell_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<json>;
-      auto sell_limit(string symbol, double quantity, double price) -> Maybe<json>;
-      auto sell_market(string symbol, double quantity, const Map &options) -> Maybe<json>;
-      auto sell_market(string symbol, double quantity) -> Maybe<json>;
+      auto order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<NewOrderResponse>;
+      auto order(string side, string type, string symbol, double quantity) -> Maybe<NewOrderResponse>;
+      auto buy_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<NewOrderResponse>;
+      auto buy_limit(string symbol, double quantity, double price) -> Maybe<NewOrderResponse>;
+      auto buy_market(string symbol, double quantity,const Map &options) -> Maybe<NewOrderResponse>;
+      auto buy_market(string symbol, double quantity) -> Maybe<NewOrderResponse>;
+      auto sell_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<NewOrderResponse>;
+      auto sell_limit(string symbol, double quantity, double price) -> Maybe<NewOrderResponse>;
+      auto sell_market(string symbol, double quantity, const Map &options) -> Maybe<NewOrderResponse>;
+      auto sell_market(string symbol, double quantity) -> Maybe<NewOrderResponse>;
       auto order_status(string symbol, string order_id) -> Maybe<json>;
       auto cancle_order(string symbol, string order_id) -> Maybe<json>;
       auto open_orders(string symbol) -> Maybe<json>;
@@ -213,7 +226,7 @@ namespace binance {
       return this->api->public_get("/api/v1/ticker/allBookTickers") >>= get_datas<BookTicker>;
     }
 
-    auto Endpoint::order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<json> {
+    auto Endpoint::order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<NewOrderResponse> {
       Map params = options;
       params["side"] = side;
       params["symbol"] = symbol;
@@ -222,46 +235,46 @@ namespace binance {
       if (type == "LIMIT") {
         params["timeInForce"] = "GTC";
       }
-      return this->api->signed_post("/api/v3/order", params);
+      return this->api->signed_post("/api/v3/order", params) >>= get_new_order_response;
     }
 
-    auto Endpoint::order(string side, string type, string symbol, double quantity) -> Maybe<json> {
+    auto Endpoint::order(string side, string type, string symbol, double quantity) -> Maybe<NewOrderResponse> {
       return this->order(side, type, symbol, quantity, Map({}));
     }
 
-    auto Endpoint::buy_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<json> {
+    auto Endpoint::buy_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<NewOrderResponse> {
       Map params = options;
       params["price"] = format("{}", price);
       return this->order("BUY", "LIMIT", symbol, quantity, params);
     }
 
-    auto Endpoint::buy_limit(string symbol, double quantity, double price) -> Maybe<json> {
+    auto Endpoint::buy_limit(string symbol, double quantity, double price) -> Maybe<NewOrderResponse> {
       return this->buy_limit(symbol, quantity, price, Map({}));
     }
 
-    auto Endpoint::buy_market(string symbol, double quantity, const Map &options) -> Maybe<json> {
+    auto Endpoint::buy_market(string symbol, double quantity, const Map &options) -> Maybe<NewOrderResponse> {
       return this->order("BUY", "MARKET", symbol, quantity, options);
     }
 
-    auto Endpoint::buy_market(string symbol, double quantity) -> Maybe<json> {
+    auto Endpoint::buy_market(string symbol, double quantity) -> Maybe<NewOrderResponse> {
       return this->buy_market(symbol, quantity, Map({}));
     }
 
-    auto Endpoint::sell_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<json> {
+    auto Endpoint::sell_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<NewOrderResponse> {
       Map params = options;
       params["price"] = format("{}", price);
       return this->order("SELL", "LIMIT", symbol, quantity, params);
     }
 
-    auto Endpoint::sell_limit(string symbol, double quantity, double price) -> Maybe<json> {
+    auto Endpoint::sell_limit(string symbol, double quantity, double price) -> Maybe<NewOrderResponse> {
       return this->sell_limit(symbol, quantity, price, Map({}));
     }
 
-    auto Endpoint::sell_market(string symbol, double quantity, const Map &options) -> Maybe<json> {
+    auto Endpoint::sell_market(string symbol, double quantity, const Map &options) -> Maybe<NewOrderResponse> {
       return this->order("SELL", "MARKET", symbol, quantity, options);
     }
 
-    auto Endpoint::sell_market(string symbol, double quantity) -> Maybe<json> {
+    auto Endpoint::sell_market(string symbol, double quantity) -> Maybe<NewOrderResponse> {
       return this->sell_market(symbol, quantity, Map({}));
     }
 

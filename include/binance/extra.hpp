@@ -102,13 +102,22 @@ namespace binance {
       return Nothing<json>;
     };
     template <>
-    function <Maybe<json>(BookTicker)> print_result<BookTicker> = [](const auto &result) {
+    function<Maybe<json>(BookTicker)> print_result<BookTicker> = [](const auto &result) {
       cout << format("symbol = {0}, bidPrice = {1}, bidQty = {2}, askPrice = {3}, askQty = {4}",
                      result.symbol,
                      result.bid_price,
                      result.bid_qty,
                      result.ask_price,
                      result.ask_qty) << endl;
+      return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(NewOrderResponse)> print_result<NewOrderResponse> = [](const auto &result) {
+      cout << format("symbol = {0}, orderId = {1}, clientOrderId = {2}, transactTime = {3}",
+                     result.symbol,
+                     result.order_id,
+                     result.client_order_id,
+                     result.transact_time) << endl;
       return Nothing<json>;
     };
 
