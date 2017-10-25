@@ -16,15 +16,6 @@ namespace binance {
       long transact_time;
     };
 
-    void to_json(json& j, const NewOrderResponse& t) {
-      j = json{
-        { "symbol", t.symbol },
-        { "orderId", t.order_id },
-        { "clientOrderId", t.client_order_id },
-        { "transactTime", t.transact_time }
-      };
-    }
-
     void from_json(const json& j, NewOrderResponse& t) {
       t.symbol = j.at("symbol").get<string>();
       t.order_id = j.at("orderId").get<long>();

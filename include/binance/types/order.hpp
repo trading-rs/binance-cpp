@@ -25,24 +25,6 @@ namespace binance {
       long time;
     };
 
-    void to_json(json& j, const Order& t) {
-      j = json{
-        { "symbol", t.symbol },
-        { "orderId", t.order_id },
-        { "clientOrderId", t.client_order_id },
-        { "price", t.price },
-        { "origQty", t.orig_qty },
-        { "executedQty", t.executed_qty },
-        { "status", t.status },
-        { "timeInForce", t.time_in_force },
-        { "type", t.type },
-        { "side", t.side },
-        { "stopPrice", t.stop_price },
-        { "icebergQty", t.iceberg_qty },
-        { "time", t.time }
-      };
-    }
-
     void from_json(const json& j, Order& t) {
       t.symbol = j.at("symbol").get<string>();
       t.order_id = j.at("orderId").get<long>();

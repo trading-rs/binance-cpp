@@ -28,27 +28,6 @@ namespace binance {
       long count;
     };
 
-    void to_json(json& j, const TickerStatistics& t) {
-      j = json{
-        { "priceChange", t.price_change },
-        { "priceChangePercent", t.price_change_percent },
-        { "weightedAvgPrice", t.weighted_avg_price },
-        { "prevClosePrice", t.prev_close_price },
-        { "lastPrice", t.last_price },
-        { "bidPrice", t.bid_price },
-        { "askPrice", t.ask_price },
-        { "openPrice", t.open_price },
-        { "highPrice", t.high_price },
-        { "lowPrice", t.low_price },
-        { "volume", t.volume },
-        { "openTime", t.open_time },
-        { "closeTime", t.close_time },
-        { "firstId", t.first_id },
-        { "lastId", t.last_id },
-        { "count", t.count }
-      };
-    }
-
     void from_json(const json& j, TickerStatistics& t) {
       t.price_change = j.at("priceChange").get<string>();
       t.price_change_percent = j.at("priceChangePercent").get<string>();

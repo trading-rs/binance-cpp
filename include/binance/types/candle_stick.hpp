@@ -23,10 +23,6 @@ namespace binance {
       string taker_buy_quote_asset_volume;
     };
 
-    void to_json(json& j, const CandleStick& c) {
-      j = json::array({ c.open_time , c.open, c.high, c.low, c.close, c.volumn, c.close_time, c.quote_asset_volume, c.number_of_trades, c.taker_buy_base_asset_volume, c.taker_buy_quote_asset_volume });
-    }
-
     void from_json(const json& j, CandleStick& c) {
       c.open_time = j.at(0).get<long>();
       c.open = j.at(1).get<string>();

@@ -20,19 +20,6 @@ namespace binance {
       bool is_best_price_match;
     };
 
-    void to_json(json& j, const AggTrade& a) {
-      j = json{
-        { "a", a.aggregate_trade_id },
-        { "p", a.price },
-        { "q", a.quantity },
-        { "f", a.first_trade_id },
-        { "l", a.last_trade_id },
-        { "T", a.timestamp },
-        { "m", a.is_buyer_maker },
-        { "M", a.is_best_price_match }
-      };
-    }
-
     void from_json(const json& j, AggTrade& a) {
       a.aggregate_trade_id = j.at("a").get<long>();
       a.price = j.at("p").get<string>();

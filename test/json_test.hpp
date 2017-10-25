@@ -3,7 +3,7 @@
 #include <binance/binance.hpp>
 using namespace binance::types;
 
-TEST_CASE("Test serialization and deserialization for OrderBook") {
+TEST_CASE("Test deserialization for OrderBook") {
   json j = json::parse("{\"lastUpdateId\":1027024,\"bids\":[[\"4.00000000\",\"431.00000000\",[]]],\"asks\":[[\"4.00000200\",\"12.00000000\",[]]]}");
   OrderBook ob = j;
   REQUIRE(ob.last_update_id == 1027024);
@@ -15,7 +15,7 @@ TEST_CASE("Test serialization and deserialization for OrderBook") {
   REQUIRE(ob.asks[0].qty == "12.00000000");
 }
 
-TEST_CASE("Test serialization and deserialization for AggTrade") {
+TEST_CASE("Test deserialization for AggTrade") {
   json j = json::parse("[{\"a\":26129,\"p\":\"0.01633102\",\"q\":\"4.70443515\",\"f\":27781,\"l\":27781,\"T\":1498793709153,\"m\":true,\"M\":true}]");
   vector<AggTrade> ats = j;
   REQUIRE(ats.size() == 1);
@@ -29,7 +29,7 @@ TEST_CASE("Test serialization and deserialization for AggTrade") {
   REQUIRE(ats[0].is_best_price_match == true);
 }
 
-TEST_CASE("Test serialization and deserialization for CandleStick") {
+TEST_CASE("Test deserialization for CandleStick") {
   json j = json::parse("[[1499040000000,\"0.01634790\",\"0.80000000\",\"0.01575800\",\"0.01577100\",\"148976.11427815\",1499644799999,\"2434.19055334\",308,\"1756.87402397\",\"28.46694368\",\"17928899.62484339\"]]");
   vector<CandleStick> css = j;
   REQUIRE(css.size() == 1);
@@ -47,7 +47,7 @@ TEST_CASE("Test serialization and deserialization for CandleStick") {
   REQUIRE(cs.taker_buy_quote_asset_volume == "28.46694368");
 }
 
-TEST_CASE("Test serialization and deserialization for TickerStatistics") {
+TEST_CASE("Test deserialization for TickerStatistics") {
   json j = json::parse("{\"priceChange\":\"-94.99999800\",\"priceChangePercent\":\"-95.960\",\"weightedAvgPrice\":\"0.29628482\",\"prevClosePrice\":\"0.10002000\",\"lastPrice\":\"4.00000200\",\"bidPrice\":\"4.00000000\",\"askPrice\":\"4.00000200\",\"openPrice\":\"99.00000000\",\"highPrice\":\"100.00000000\",\"lowPrice\":\"0.10000000\",\"volume\":\"8913.30000000\",\"openTime\":1499783499040,\"closeTime\":1499869899040,\"firstId\":28385,\"lastId\":28460,\"count\":76}");
   TickerStatistics ts = j;
   REQUIRE(ts.price_change == "-94.99999800");
@@ -68,7 +68,7 @@ TEST_CASE("Test serialization and deserialization for TickerStatistics") {
   REQUIRE(ts.count == 76);
 }
 
-TEST_CASE("Test serialization and deserialization for TickerPrice") {
+TEST_CASE("Test deserialization for TickerPrice") {
   json j = json::parse("[{\"symbol\":\"LTCBTC\",\"price\":\"4.00000200\"},{\"symbol\":\"ETHBTC\",\"price\":\"0.07946600\"}]");
   vector<TickerPrice> tps = j;
   REQUIRE(tps.size() == 2);
@@ -78,7 +78,7 @@ TEST_CASE("Test serialization and deserialization for TickerPrice") {
   REQUIRE(tps[1].price == "0.07946600");
 }
 
-TEST_CASE("Test serialization and deserialization for BookTicker") {
+TEST_CASE("Test deserialization for BookTicker") {
   json j = json::parse("[{\"symbol\":\"LTCBTC\",\"bidPrice\":\"4.00000000\",\"bidQty\":\"431.00000000\",\"askPrice\":\"4.00000200\",\"askQty\":\"9.00000000\"},{\"symbol\":\"ETHBTC\",\"bidPrice\":\"0.07946700\",\"bidQty\":\"9.00000000\",\"askPrice\":\"100000.00000000\",\"askQty\":\"1000.00000000\"}]");
   vector<BookTicker> bts = j;
   REQUIRE(bts.size() == 2);
@@ -94,7 +94,7 @@ TEST_CASE("Test serialization and deserialization for BookTicker") {
   REQUIRE(bts[1].ask_qty == "1000.00000000");
 }
 
-TEST_CASE("Test serialization and deserialization for NewOrderResponse") {
+TEST_CASE("Test deserialization for NewOrderResponse") {
   json j = json::parse("{\"symbol\":\"LTCBTC\",\"orderId\":1,\"clientOrderId\":\"myOrder1\",\"transactTime\":1499827319559}");
   NewOrderResponse nor = j;
   REQUIRE(nor.symbol == "LTCBTC");
@@ -103,7 +103,7 @@ TEST_CASE("Test serialization and deserialization for NewOrderResponse") {
   REQUIRE(nor.transact_time == 1499827319559);
 }
 
-TEST_CASE("Test serialization and deserialization for Order") {
+TEST_CASE("Test deserialization for Order") {
   json j = json::parse("{\"symbol\":\"LTCBTC\",\"orderId\":1,\"clientOrderId\":\"myOrder1\",\"price\":\"0.1\",\"origQty\":\"1.0\",\"executedQty\":\"0.0\",\"status\":\"NEW\",\"timeInForce\":\"GTC\",\"type\":\"LIMIT\",\"side\":\"BUY\",\"stopPrice\":\"0.0\",\"icebergQty\":\"0.0\",\"time\":1499827319559}");
   Order o = j;
   REQUIRE(o.symbol == "LTCBTC");
@@ -121,7 +121,7 @@ TEST_CASE("Test serialization and deserialization for Order") {
   REQUIRE(o.time == 1499827319559);
 }
 
-TEST_CASE("Test serialization and deserialization for CancelOrderResponse") {
+TEST_CASE("Test deserialization for CancelOrderResponse") {
   json j = json::parse("{\"symbol\":\"LTCBTC\",\"origClientOrderId\":\"myOrder1\",\"orderId\":1,\"clientOrderId\":\"cancelMyOrder1\"}");
   CancelOrderResponse cop = j;
   REQUIRE(cop.symbol == "LTCBTC");

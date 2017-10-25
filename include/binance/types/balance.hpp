@@ -15,14 +15,6 @@ namespace binance {
       double locked;
     };
 
-    void to_json(json& j, const Balance& b) {
-      j = json{
-        { "asset", b.asset },
-        { "free", b.free },
-        { "locked", b.locked }
-      };
-    }
-
     void from_json(const json& j, Balance& b) {
       b.asset = j.at("asset").get<string>();
       b.free = j.at("free").get<double>();

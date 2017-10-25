@@ -21,10 +21,6 @@ struct OrderBookEntry {
       string qty; // quantity
     };
 
-    void to_json(json& j, const OrderBookEntry& o) {
-      j = json::array({ o.price, o.qty });
-    }
-
     void from_json(const json& j, OrderBookEntry& o) {
       if (j.is_array()) {
         o.price = j.at(0).get<string>();
@@ -39,14 +35,6 @@ struct OrderBookEntry {
       vector<OrderBookEntry> bids;
       vector<OrderBookEntry> asks;
     };
-
-    void to_json(json& j, const OrderBook& o) {
-      j = json{
-        { "lastUpdateId", o.last_update_id },
-        { "bids", o.bids },
-        { "asks", o.asks }
-      };
-    }
 
     void from_json(const json& j, OrderBook& o) {
       o.last_update_id = j.at("lastUpdateId").get<long>();

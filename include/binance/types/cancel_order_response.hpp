@@ -16,15 +16,6 @@ namespace binance {
       string orig_client_order_id;
     };
 
-    void to_json(json& j, const CancelOrderResponse& t) {
-      j = json{
-        { "symbol", t.symbol },
-        { "orderId", t.order_id },
-        { "clientOrderId", t.client_order_id },
-        { "origClientOrderId", t.orig_client_order_id }
-      };
-    }
-
     void from_json(const json& j, CancelOrderResponse& t) {
       t.symbol = j.at("symbol").get<string>();
       t.order_id = j.at("orderId").get<long>();

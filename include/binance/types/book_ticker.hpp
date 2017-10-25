@@ -17,16 +17,6 @@ namespace binance {
       string ask_qty;
     };
 
-    void to_json(json& j, const BookTicker& t) {
-      j = json{
-        { "symbol", t.symbol },
-        { "bidPrice", t.bid_price },
-        { "bidQty", t.bid_qty },
-        { "askPrice", t.ask_price },
-        { "askQty", t.ask_qty }
-      };
-    }
-
     void from_json(const json& j, BookTicker& t) {
       t.symbol = j.at("symbol").get<string>();
       t.bid_price = j.at("bidPrice").get<string>();

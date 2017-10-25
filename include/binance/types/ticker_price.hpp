@@ -14,13 +14,6 @@ namespace binance {
       string price;
     };
 
-    void to_json(json& j, const TickerPrice& t) {
-      j = json{
-        { "symbol", t.symbol },
-        { "price", t.price }
-      };
-    }
-
     void from_json(const json& j, TickerPrice& t) {
       t.symbol = j.at("symbol").get<string>();
       t.price = j.at("price").get<string>();
