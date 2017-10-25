@@ -101,6 +101,16 @@ namespace binance {
                      result.price) << endl;
       return Nothing<json>;
     };
+    template <>
+    function <Maybe<json>(BookTicker)> print_result<BookTicker> = [](const auto &result) {
+      cout << format("symbol = {0}, bidPrice = {1}, bidQty = {2}, askPrice = {3}, askQty = {4}",
+                     result.symbol,
+                     result.bid_price,
+                     result.bid_qty,
+                     result.ask_price,
+                     result.ask_qty) << endl;
+      return Nothing<json>;
+    };
 
     template <typename T>
     function<Maybe<json>(vector<T>)> print_results = [](const vector<T> &results) {

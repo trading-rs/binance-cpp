@@ -77,3 +77,19 @@ TEST_CASE("Test serialization and deserialization for TickerPrice") {
   REQUIRE(tps[1].symbol == "ETHBTC");
   REQUIRE(tps[1].price == "0.07946600");
 }
+
+TEST_CASE("Test serialization and deserialization for BookTicker") {
+  json j = json::parse("[{\"symbol\":\"LTCBTC\",\"bidPrice\":\"4.00000000\",\"bidQty\":\"431.00000000\",\"askPrice\":\"4.00000200\",\"askQty\":\"9.00000000\"},{\"symbol\":\"ETHBTC\",\"bidPrice\":\"0.07946700\",\"bidQty\":\"9.00000000\",\"askPrice\":\"100000.00000000\",\"askQty\":\"1000.00000000\"}]");
+  vector<BookTicker> bts = j;
+  REQUIRE(bts.size() == 2);
+  REQUIRE(bts[0].symbol == "LTCBTC");
+  REQUIRE(bts[0].bid_price == "4.00000000");
+  REQUIRE(bts[0].bid_qty == "431.00000000");
+  REQUIRE(bts[0].ask_price == "4.00000200");
+  REQUIRE(bts[0].ask_qty == "9.00000000");
+  REQUIRE(bts[1].symbol == "ETHBTC");
+  REQUIRE(bts[1].bid_price == "0.07946700");
+  REQUIRE(bts[1].bid_qty == "9.00000000");
+  REQUIRE(bts[1].ask_price == "100000.00000000");
+  REQUIRE(bts[1].ask_qty == "1000.00000000");
+}

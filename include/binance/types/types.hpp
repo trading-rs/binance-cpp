@@ -6,3 +6,4 @@
 #include "balance.hpp"
 #include "ticker_statistics.hpp"
 #include "ticker_price.hpp"
+#include "book_ticker.hpp"

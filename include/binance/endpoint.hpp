@@ -24,6 +24,17 @@ namespace binance {
   namespace endpoint {
     shared_ptr<spd::logger> logger = spd::stdout_color_mt("ENDPOINT");
 
+    template <typename T>
+    function<Maybe<vector<T>>(json)> get_datas = [](const json &j) {
+      if (j.is_array()) {
+        vector<T> ats = j;
+        return Maybe<vector<T>>(ats);
+      } else {
+        logger->error("{0} is not a json array!", j.dump());
+        return Nothing<vector<T>>;
+      }
+    };
+
     function<Maybe<long>(json)> get_server_time = [](const auto &j) {
       auto st = j["serverTime"];
       if (st != nullptr) {
@@ -43,26 +54,6 @@ namespace binance {
       } else {
         logger->error("{0} does not contain `lastUpdateId` or `bids` or `asks` property!", j.dump());
         return Nothing<OrderBook>;
-      }
-    };
-
-    function<Maybe<vector<AggTrade>>(json)> get_agg_trades = [](const auto &j) {
-      if (j.is_array()) {
-        vector<AggTrade> ats = j;
-        return Maybe<vector<AggTrade>>(ats);
-      } else {
-        logger->error("{0} is not a json array!", j.dump());
-        return Nothing<vector<AggTrade>>;
-      }
-    };
-
-    function<Maybe<vector<CandleStick>>(json)> get_candlesticks = [](const auto &j) {
-      if (j.is_array()) {
-        vector<CandleStick> cds = j;
-        return Maybe<vector<CandleStick>>(cds);
-      } else {
-        logger->error("{0} is not a json array!", j.dump());
-        return Nothing<vector<CandleStick>>;
       }
     };
 
@@ -88,16 +79,6 @@ namespace binance {
       } else {
         logger->error("{0} is missing fields as a ticker statistics data!", j.dump());
         return Nothing<TickerStatistics>;
-      }
-    };
-
-    function<Maybe<vector<TickerPrice>>(json)> get_ticker_prices = [](const auto &j) {
-      if (j.is_array()) {
-        vector<TickerPrice> tps = j;
-        return Maybe<vector<TickerPrice>>(tps);
-      } else {
-        logger->error("{0} is not a json array!", j.dump());
-        return Nothing<vector<TickerPrice>>;
       }
     };
 
@@ -135,7 +116,7 @@ namespace binance {
       auto candlestick_bars(string symbol, string interval) -> Maybe<vector<CandleStick>>;
       auto ticker_24hr(string symbol) -> Maybe<TickerStatistics>;
       auto all_prices() -> Maybe<vector<TickerPrice>>;
-      auto all_book_tickers() -> Maybe<json>;
+      auto all_book_tickers() -> Maybe<vector<BookTicker>>;
       auto order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<json>;
       auto order(string side, string type, string symbol, double quantity) -> Maybe<json>;
       auto buy_limit(string symbol, double quantity, double price, const Map &options) -> Maybe<json>;
@@ -202,7 +183,7 @@ namespace binance {
     auto Endpoint::agg_trades(string symbol, const Map &options) -> Maybe<vector<AggTrade>> {
       Map params = options;
       params["symbol"] = symbol;
-      return this->api->public_get("/api/v1/aggTrades", params) >>= get_agg_trades;
+      return this->api->public_get("/api/v1/aggTrades", params) >>= get_datas<AggTrade>;
     }
 
     auto Endpoint::agg_trades(string symbol) -> Maybe<vector<AggTrade>> {
@@ -213,7 +194,7 @@ namespace binance {
       Map params = options;
       params["symbol"] = symbol;
       params["interval"] = interval;
-      return this->api->public_get("/api/v1/klines", params) >>= get_candlesticks;
+      return this->api->public_get("/api/v1/klines", params) >>= get_datas<CandleStick>;
     }
 
     auto Endpoint::candlestick_bars(string symbol, string interval) -> Maybe<vector<CandleStick>> {
@@ -225,11 +206,11 @@ namespace binance {
     }
 
     auto Endpoint::all_prices() -> Maybe<vector<TickerPrice>> {
-      return this->api->public_get("/api/v1/ticker/allPrices") >>= get_ticker_prices;
+      return this->api->public_get("/api/v1/ticker/allPrices") >>= get_datas<TickerPrice>;
     }
 
-    auto Endpoint::all_book_tickers() -> Maybe<json> {
-      return this->api->public_get("/api/v1/ticker/allBookTickers");
+    auto Endpoint::all_book_tickers() -> Maybe<vector<BookTicker>> {
+      return this->api->public_get("/api/v1/ticker/allBookTickers") >>= get_datas<BookTicker>;
     }
 
     auto Endpoint::order(string side, string type, string symbol, double quantity, const Map &options) -> Maybe<json> {
