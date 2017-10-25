@@ -47,3 +47,33 @@ TEST_CASE("Test serialization and deserialization for CandleStick") {
   REQUIRE(cs.taker_buy_quote_asset_volume == "28.46694368");
 }
 
+TEST_CASE("Test serialization and deserialization for TickerStatistics") {
+  json j = json::parse("{\"priceChange\":\"-94.99999800\",\"priceChangePercent\":\"-95.960\",\"weightedAvgPrice\":\"0.29628482\",\"prevClosePrice\":\"0.10002000\",\"lastPrice\":\"4.00000200\",\"bidPrice\":\"4.00000000\",\"askPrice\":\"4.00000200\",\"openPrice\":\"99.00000000\",\"highPrice\":\"100.00000000\",\"lowPrice\":\"0.10000000\",\"volume\":\"8913.30000000\",\"openTime\":1499783499040,\"closeTime\":1499869899040,\"firstId\":28385,\"lastId\":28460,\"count\":76}");
+  TickerStatistics ts = j;
+  REQUIRE(ts.price_change == "-94.99999800");
+  REQUIRE(ts.price_change_percent == "-95.960");
+  REQUIRE(ts.weighted_avg_price == "0.29628482");
+  REQUIRE(ts.prev_close_price == "0.10002000");
+  REQUIRE(ts.last_price == "4.00000200");
+  REQUIRE(ts.bid_price == "4.00000000");
+  REQUIRE(ts.ask_price == "4.00000200");
+  REQUIRE(ts.open_price == "99.00000000");
+  REQUIRE(ts.high_price == "100.00000000");
+  REQUIRE(ts.low_price == "0.10000000");
+  REQUIRE(ts.volume == "8913.30000000");
+  REQUIRE(ts.open_time == 1499783499040);
+  REQUIRE(ts.close_time == 1499869899040);
+  REQUIRE(ts.first_id == 28385);
+  REQUIRE(ts.last_id == 28460);
+  REQUIRE(ts.count == 76);
+}
+
+TEST_CASE("Test serialization and deserialization for TickerPrice") {
+  json j = json::parse("[{\"symbol\":\"LTCBTC\",\"price\":\"4.00000200\"},{\"symbol\":\"ETHBTC\",\"price\":\"0.07946600\"}]");
+  vector<TickerPrice> tps = j;
+  REQUIRE(tps.size() == 2);
+  REQUIRE(tps[0].symbol == "LTCBTC");
+  REQUIRE(tps[0].price == "4.00000200");
+  REQUIRE(tps[1].symbol == "ETHBTC");
+  REQUIRE(tps[1].price == "0.07946600");
+}
