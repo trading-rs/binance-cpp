@@ -311,3 +311,75 @@ endpoint->cancel_order("ETHBTC", 13151) >>= print_result<CancelOrderResponse>;
 symbol = LINKETH, orderId = 12345, clientOrderId = XYZ, origClientOrderId = THXAS
 </pre>
 </details>
+
+#### Get account details
+```C++
+endpoint->my_account() >>= print_result<Account>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+makerCommission = 10, takerCommission = 10, buyerCommission = 0, sellerCommission = 0, canTrade = true, canWithdraw = true, canDeposit = true
+asset = BTC, free = 0.00000000, locked = 0.00000000
+asset = LTC, free = 0.00000000, locked = 0.00000000
+asset = ETH, free = 0.00000000, locked = 0.00000000
+asset = BNC, free = 0.00000000, locked = 0.00000000
+asset = ICO, free = 0.00000000, locked = 0.00000000
+asset = NEO, free = 0.00000000, locked = 0.00000000
+asset = BNB, free = 0.00000000, locked = 0.00000000
+asset = 123, free = 0.00000000, locked = 0.00000000
+asset = 456, free = 0.00000000, locked = 0.00000000
+asset = QTUM, free = 0.00000000, locked = 0.00000000
+asset = EOS, free = 0.00000000, locked = 0.00000000
+asset = SNT, free = 0.00000000, locked = 0.00000000
+asset = BNT, free = 0.00000000, locked = 0.00000000
+asset = GAS, free = 0.00000000, locked = 0.00000000
+asset = BCC, free = 0.00000000, locked = 0.00000000
+asset = BTM, free = 0.00000000, locked = 0.00000000
+asset = USDT, free = 0.00000000, locked = 0.00000000
+asset = HCC, free = 0.00000000, locked = 0.00000000
+asset = HSR, free = 0.00000000, locked = 0.00000000
+asset = OAX, free = 0.00000000, locked = 0.00000000
+asset = DNT, free = 0.00000000, locked = 0.00000000
+asset = MCO, free = 0.00000000, locked = 0.00000000
+asset = ICN, free = 0.00000000, locked = 0.00000000
+asset = ELC, free = 0.00000000, locked = 0.00000000
+asset = PAY, free = 0.00000000, locked = 0.00000000
+asset = ZRX, free = 0.00000000, locked = 0.00000000
+asset = OMG, free = 0.00000000, locked = 0.00000000
+asset = WTC, free = 0.00000000, locked = 0.00000000
+asset = LRX, free = 0.00000000, locked = 0.00000000
+asset = YOYO, free = 0.00000000, locked = 0.00000000
+asset = LRC, free = 0.00000000, locked = 0.00000000
+asset = LLT, free = 0.00000000, locked = 0.00000000
+asset = TRX, free = 0.00000000, locked = 0.00000000
+asset = FID, free = 0.00000000, locked = 0.00000000
+asset = SNGLS, free = 0.00000000, locked = 0.00000000
+asset = STRAT, free = 0.00000000, locked = 0.00000000
+asset = BQX, free = 0.00000000, locked = 0.00000000
+asset = FUN, free = 0.00000000, locked = 0.00000000
+asset = KNC, free = 0.00000000, locked = 0.00000000
+asset = CDT, free = 0.00000000, locked = 0.00000000
+asset = XVG, free = 0.00000000, locked = 0.00000000
+asset = IOTA, free = 0.00000000, locked = 0.00000000
+asset = SNM, free = 0.00000000, locked = 0.00000000
+asset = LINK, free = 0.00000000, locked = 0.00000000
+asset = CVC, free = 0.00000000, locked = 0.00000000
+asset = TNT, free = 0.00000000, locked = 0.00000000
+asset = REP, free = 0.00000000, locked = 0.00000000
+asset = CTR, free = 0.00000000, locked = 0.00000000
+asset = MDA, free = 0.00000000, locked = 0.00000000
+asset = MTL, free = 0.00000000, locked = 0.00000000
+asset = SALT, free = 0.00000000, locked = 0.00000000
+asset = NULS, free = 0.00000000, locked = 0.00000000
+asset = SUB, free = 0.00000000, locked = 0.00000000
+asset = STX, free = 0.00000000, locked = 0.00000000
+asset = MTH, free = 0.00000000, locked = 0.00000000
+asset = CAT, free = 0.00000000, locked = 0.00000000
+asset = ADX, free = 0.00000000, locked = 0.00000000
+asset = PIX, free = 0.00000000, locked = 0.00000000
+asset = ETC, free = 0.00000000, locked = 0.00000000
+asset = ENG, free = 0.00000000, locked = 0.00000000
+asset = ZEC, free = 0.00000000, locked = 0.00000000
+</pre>
+</details>

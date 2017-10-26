@@ -49,6 +49,11 @@ int main(int argc, char** argv) {
   endpoint->open_orders("ETHBTC") >>= print_results<Order>;
   endpoint->all_orders("ETHBTC") >>= print_results<Order>;
   endpoint->cancel_order("ETHBTC", 13151) >>= print_result<CancelOrderResponse>;
+  function<int(Account)> get_buyer_commission = [](const auto &a) {
+    return a.buyer_commission;
+  };
+  endpoint->my_account() >>= print_result<Account>;
+  (endpoint->my_account() ^ get_buyer_commission) >>= print_result<int>;
 
   endpoint->depth_websocket("ethbtc",  [](json data) {
       cout << data.dump(2) << endl;

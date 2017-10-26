@@ -116,7 +116,7 @@ namespace binance {
       */
       auto all_orders(string symbol, const Map &options) -> Maybe<vector<Order>>;
       auto all_orders(string symbol) -> Maybe<vector<Order>>;
-      auto my_account() -> Maybe<json>;
+      auto my_account() -> Maybe<Account>;
       /**
          @options:
          fromId: TradeId to fetch from. Default gets most recent trades
@@ -276,8 +276,8 @@ namespace binance {
       return this->all_orders(symbol, Map({}));
     }
 
-    auto Endpoint::my_account() -> Maybe<json> {
-      return this->api->signed_get("/api/v3/account", Map({}));
+    auto Endpoint::my_account() -> Maybe<Account> {
+      return this->api->signed_get("/api/v3/account", Map({})) >>= get_data<Account>;
     }
 
     auto Endpoint::my_trades(string symbol, const Map &options) -> Maybe<json> {

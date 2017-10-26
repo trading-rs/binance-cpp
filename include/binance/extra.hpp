@@ -24,9 +24,22 @@ namespace binance {
     };
 
     template <typename T> function<Maybe<json>(T)> print_result;
+    template <typename T>
+    function<Maybe<json>(vector<T>)> print_results = [](const vector<T> &results) {
+      std::for_each(results.cbegin(), results.cend(), [&](const T &result) {
+          print_result<T>(result);
+        });
+      return Nothing<json>;
+    };
+
     template <>
     function<Maybe<json>(json)> print_result<json> = [](const auto &result) {
       cout << result.dump(2) << endl;
+      return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(int)> print_result<int> = [](const auto &result) {
+      cout << result << endl;
       return Nothing<json>;
     };
     template <>
@@ -147,13 +160,25 @@ namespace binance {
                      result.orig_client_order_id) << endl;
       return Nothing<json>;
     };
-
-    template <typename T>
-    function<Maybe<json>(vector<T>)> print_results = [](const vector<T> &results) {
-      std::for_each(results.cbegin(), results.cend(), [&](const T &result) {
-          print_result<T>(result);
-        });
+    template <>
+    function<Maybe<json>(Balance)> print_result<Balance> = [](const auto &result) {
+      cout << format("asset = {0}, free = {1}, locked = {2}",
+                     result.asset,
+                     result.free,
+                     result.locked) << endl;
       return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(Account)> print_result<Account> = [](const auto &result) {
+      cout << format("makerCommission = {0}, takerCommission = {1}, buyerCommission = {2}, sellerCommission = {3}, canTrade = {4}, canWithdraw = {5}, canDeposit = {6}",
+                     result.maker_commission,
+                     result.taker_commission,
+                     result.buyer_commission,
+                     result.seller_commission,
+                     result.can_trade,
+                     result.can_deposit,
+                     result.can_withdraw) << endl;
+      return Maybe<vector<Balance>>(result.balances) >>= print_results<Balance>;
     };
   }
 }
