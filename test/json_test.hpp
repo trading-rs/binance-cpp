@@ -162,3 +162,22 @@ TEST_CASE("Test deserialization for Trade") {
   REQUIRE(ts[0].is_maker == false);
   REQUIRE(ts[0].is_best_match == true);
 }
+
+TEST_CASE("Test deserialization for DepthEvent") {
+  json j = json::parse("{\"e\":\"depthUpdate\",\"E\":1499404630606,\"s\":\"ETHBTC\",\"u\":7913455,\"b\":[[\"0.10376590\",\"59.15767010\",[]]],\"a\":[[\"0.10376586\",\"159.15767010\",[]],[\"0.10383109\",\"345.86845230\",[]],[\"0.10490700\",\"0.00000000\",[]]]}");
+  DepthEvent de = j;
+  REQUIRE(de.event_type == "depthUpdate");
+  REQUIRE(de.event_time == 1499404630606);
+  REQUIRE(de.symbol == "ETHBTC");
+  REQUIRE(de.update_id == 7913455);
+  vector<OrderBookEntry> bids_expected = {
+    OrderBookEntry({ "0.10376590", "59.15767010" })
+  };
+  vector<OrderBookEntry> asks_expected = {
+    OrderBookEntry({ "0.10376586", "159.15767010" }),
+    OrderBookEntry({ "0.10383109", "345.86845230" }),
+    OrderBookEntry({ "0.10490700", "0.00000000" })
+  };
+  REQUIRE(de.bids == bids_expected);
+  REQUIRE(de.asks == asks_expected);
+}

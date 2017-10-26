@@ -194,5 +194,18 @@ namespace binance {
                      result.is_best_match) << endl;
       return Nothing<json>;
     };
+    template <>
+    function<Maybe<json>(DepthEvent)> print_result<DepthEvent> = [](const auto &result) {
+      cout << format("e = {0}, E = {1}, s = {2}, u = {3}",
+                     result.event_type,
+                     result.event_time,
+                     result.symbol,
+                     result.update_id) << endl;
+      cout << "Bids:" << endl;
+      Maybe<vector<OrderBookEntry>>(result.bids) >>= print_results<OrderBookEntry>;
+      cout << "Asks:" << endl;
+      return Maybe<vector<OrderBookEntry>>(result.asks) >>= print_results<OrderBookEntry>;
+      cout << endl;
+    };
   }
 }

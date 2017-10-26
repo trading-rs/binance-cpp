@@ -394,3 +394,50 @@ endpoint->my_trades("LTCBTC") >>= print_results<Trade>;
 id = 123, price = 0.00000100, qty = 1000.00000000, commission = 0.00172100, commissionAsset = LTC, time=1507927870561, buyer=false, maker=false, bestMatch=true, orderId = 11289
 </pre>
 </details>
+
+### WebSocket API
+
+#### Listen for changes in the order book for ETH/BTC
+```C++
+endpoint->depth_websocket("ethbtc",  [](json data) {
+    DepthEvent de = data;
+    print_result<DepthEvent>(de);
+  });
+```
+<details>
+<summary>View Response</summary>
+<pre>
+e = depthUpdate, E = 1509021306609, s = ETHBTC, u = 20036960
+Bids:
+0.05002200 - 1.13700000
+0.05001200 - 0.00000000
+0.05001100 - 12.27300000
+0.05000100 - 1.89500000
+0.04999000 - 0.00000000
+0.04972700 - 0.00000000
+0.04730100 - 0.00000000
+0.04723500 - 1.89500000
+Asks:
+0.05030200 - 19.99000000
+0.05030300 - 0.00000000
+0.05032300 - 12.82300000
+0.05032400 - 0.00000000
+e = depthUpdate, E = 1509021307610, s = ETHBTC, u = 20036966
+Bids:
+0.05002300 - 12.27300000
+0.05002100 - 0.00000000
+0.05001100 - 0.00000000
+0.04968000 - 1.00000000
+0.04761900 - 22.65000000
+Asks:
+0.05032300 - 0.00000000
+e = depthUpdate, E = 1509021308609, s = ETHBTC, u = 20036972
+Bids:
+0.05002300 - 0.03000000
+0.05002100 - 12.27300000
+0.04761900 - 0.00000000
+Asks:
+0.05030100 - 12.71600000
+0.05304700 - 0.00000000
+</pre>
+</details>

@@ -58,7 +58,8 @@ int main(int argc, char** argv) {
   endpoint->my_trades("LTCBTC") >>= print_results<Trade>;
 
   endpoint->depth_websocket("ethbtc",  [](json data) {
-      cout << data.dump(2) << endl;
+      DepthEvent de = data;
+      print_result<DepthEvent>(de);
     });
   endpoint->kline_websocket("ethbtc", "1m", [](json data) {
       cout << data.dump(2) << endl;

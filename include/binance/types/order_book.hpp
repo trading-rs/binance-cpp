@@ -16,7 +16,7 @@ using namespace std;
 
 namespace binance {
   namespace types {
-struct OrderBookEntry {
+    struct OrderBookEntry {
       string price;
       string qty; // quantity
     };
@@ -28,6 +28,10 @@ struct OrderBookEntry {
       } else {
         throw std::runtime_error(format("{} is not array for order entry", j.dump()));
       }
+    }
+
+    bool operator ==(const OrderBookEntry& lhs, const OrderBookEntry& rhs) {
+      return lhs.price == rhs.price && lhs.qty == rhs.qty;
     }
 
     struct OrderBook {
