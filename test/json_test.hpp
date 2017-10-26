@@ -181,3 +181,26 @@ TEST_CASE("Test deserialization for DepthEvent") {
   REQUIRE(de.bids == bids_expected);
   REQUIRE(de.asks == asks_expected);
 }
+
+TEST_CASE("Test deserialization for CandleStickEvent") {
+  json j = json::parse("{\"e\":\"kline\",\"E\":1499404907056,\"s\":\"ETHBTC\",\"k\":{\"t\":1499404860000,\"T\":1499404919999,\"s\":\"ETHBTC\",\"i\":\"1m\",\"f\":77462,\"L\":77465,\"o\":\"0.10278577\",\"c\":\"0.10278645\",\"h\":\"0.10278712\",\"l\":\"0.10278518\",\"v\":\"17.47929838\",\"n\":4,\"x\":false,\"q\":\"1.79662878\",\"V\":\"2.34879839\",\"Q\":\"0.24142166\",\"B\":\"13279784.01349473\"}}");
+  CandleStickEvent cse = j;
+  REQUIRE(cse.event_type == "kline");
+  REQUIRE(cse.event_time == 1499404907056);
+  REQUIRE(cse.symbol == "ETHBTC");
+  REQUIRE(cse.open_time == 1499404860000);
+  REQUIRE(cse.close_time == 1499404919999);
+  REQUIRE(cse.interval_id == "1m");
+  REQUIRE(cse.first_trade_id == 77462);
+  REQUIRE(cse.last_trade_id == 77465);
+  REQUIRE(cse.open == "0.10278577");
+  REQUIRE(cse.close == "0.10278645");
+  REQUIRE(cse.high == "0.10278712");
+  REQUIRE(cse.low == "0.10278518");
+  REQUIRE(cse.volume == "17.47929838");
+  REQUIRE(cse.number_of_trades == 4);
+  REQUIRE(cse.is_bar_final == false);
+  REQUIRE(cse.quote_asset_volume == "1.79662878");
+  REQUIRE(cse.active_buy_volume == "2.34879839");
+  REQUIRE(cse.quote_active_buy_volume == "0.24142166");
+}

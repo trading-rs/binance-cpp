@@ -12,3 +12,4 @@
 #include "cancel_order_response.hpp"
 #include "trade.hpp"
 #include "depth_event.hpp"
+#include "candle_stick_event.hpp"

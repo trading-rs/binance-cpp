@@ -196,7 +196,7 @@ namespace binance {
     };
     template <>
     function<Maybe<json>(DepthEvent)> print_result<DepthEvent> = [](const auto &result) {
-      cout << format("e = {0}, E = {1}, s = {2}, u = {3}",
+      cout << format("eventType = {0}, eventTime = {1}, symbol = {2}, updateId = {3}",
                      result.event_type,
                      result.event_time,
                      result.symbol,
@@ -206,6 +206,29 @@ namespace binance {
       cout << "Asks:" << endl;
       return Maybe<vector<OrderBookEntry>>(result.asks) >>= print_results<OrderBookEntry>;
       cout << endl;
+    };
+    template <>
+    function<Maybe<json>(CandleStickEvent)> print_result<CandleStickEvent> = [](const auto &result) {
+      cout << format("eventType = {0}, eventTime = {1}, symbol = {2}, openTime = {3}, closeTime = {4}, intervar = {5}, firstTradeId = {6}, lastTradeId = {7}, open = {8}, close = {9}, high = {10}, low = {11}, volume = {12}, numberOfTrades = {13}, isBarFinal = {14}, quoteVolume = {15}, volumeOfActiveBuy = {16}, quoteVolumeOfActiveBuy = {17}",
+                     result.event_type,
+                     result.event_time,
+                     result.symbol,
+                     result.open_time,
+                     result.close_time,
+                     result.interval_id,
+                     result.first_trade_id,
+                     result.last_trade_id,
+                     result.open,
+                     result.close,
+                     result.high,
+                     result.low,
+                     result.volume,
+                     result.number_of_trades,
+                     result.is_bar_final,
+                     result.quote_asset_volume,
+                     result.active_buy_volume,
+                     result.quote_active_buy_volume) << endl;
+      return Nothing<json>;
     };
   }
 }

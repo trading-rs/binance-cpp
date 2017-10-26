@@ -62,7 +62,8 @@ int main(int argc, char** argv) {
       print_result<DepthEvent>(de);
     });
   endpoint->kline_websocket("ethbtc", "1m", [](json data) {
-      cout << data.dump(2) << endl;
+      CandleStickEvent cse = data;
+      print_result<CandleStickEvent>(cse);
     });
   endpoint->trades_websocket("ethbtc", [](json data) {
       cout << data.dump(2) << endl;

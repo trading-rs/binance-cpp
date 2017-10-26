@@ -407,7 +407,7 @@ endpoint->depth_websocket("ethbtc",  [](json data) {
 <details>
 <summary>View Response</summary>
 <pre>
-e = depthUpdate, E = 1509021306609, s = ETHBTC, u = 20036960
+eventType = depthUpdate, eventTime = 1509039916984, symbol = ETHBTC, updateId = 20099711
 Bids:
 0.05002200 - 1.13700000
 0.05001200 - 0.00000000
@@ -422,7 +422,7 @@ Asks:
 0.05030300 - 0.00000000
 0.05032300 - 12.82300000
 0.05032400 - 0.00000000
-e = depthUpdate, E = 1509021307610, s = ETHBTC, u = 20036966
+eventType = depthUpdate, eventTime = 1509039917984, symbol = ETHBTC, updateId = 20099715
 Bids:
 0.05002300 - 12.27300000
 0.05002100 - 0.00000000
@@ -431,7 +431,7 @@ Bids:
 0.04761900 - 22.65000000
 Asks:
 0.05032300 - 0.00000000
-e = depthUpdate, E = 1509021308609, s = ETHBTC, u = 20036972
+eventType = depthUpdate, eventTime = 1509039918984, symbol = ETHBTC, updateId = 20099717
 Bids:
 0.05002300 - 0.03000000
 0.05002100 - 12.27300000
@@ -439,5 +439,22 @@ Bids:
 Asks:
 0.05030100 - 12.71600000
 0.05304700 - 0.00000000
+</pre>
+</details>
+
+
+#### Get 1m candlesticks in real-time for ETH/BTC
+```C++
+endpoint->kline_websocket("ethbtc", "1m", [](json data) {
+    CandleStickEvent cse = data;
+    print_result<CandleStickEvent>(cse);
+  });
+```
+<details>
+<summary>View Response</summary>
+<pre>
+eventType = kline, eventTime = 1509040185725, symbol = ETHBTC, openTime = 1509040140000, closeTime = 1509040199999, intervar = 1m, firstTradeId = 2377085, lastTradeId = 2377089, open = 0.04963400, close = 0.04963400, high = 0.04964300, low = 0.04962400, volume = 4.68300000, numberOfTrades = 5, isBarFinal = false, quoteVolume = 0.23243812, volumeOfActiveBuy = 3.68000000, quoteVolumeOfActiveBuy = 0.18266005
+eventType = kline, eventTime = 1509040201004, symbol = ETHBTC, openTime = 1509040140000, closeTime = 1509040199999, intervar = 1m, firstTradeId = 2377085, lastTradeId = 2377089, open = 0.04963400, close = 0.04963400, high = 0.04964300, low = 0.04962400, volume = 4.68300000, numberOfTrades = 5, isBarFinal = true, quoteVolume = 0.23243812, volumeOfActiveBuy = 3.68000000, quoteVolumeOfActiveBuy = 0.18266005
+eventType = kline, eventTime = 1509040201004, symbol = ETHBTC, openTime = 1509040200000, closeTime = 1509040259999, intervar = 1m, firstTradeId = -1, lastTradeId = -1, open = 0.04963400, close = 0.04963400, high = 0.04963400, low = 0.04963400, volume = 0.00000000, numberOfTrades = 0, isBarFinal = false, quoteVolume = 0.00000000, volumeOfActiveBuy = 0.00000000, quoteVolumeOfActiveBuy = 0.00000000
 </pre>
 </details>
