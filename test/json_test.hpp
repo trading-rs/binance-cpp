@@ -147,3 +147,18 @@ TEST_CASE("Test deserialization for Account") {
   REQUIRE(a.balances.size() == 2);
   REQUIRE(a.balances == balances_expected);
 }
+
+TEST_CASE("Test deserialization for Trade") {
+  json j = json::parse("[{\"id\":28457,\"price\":\"4.00000100\",\"qty\":\"12.00000000\",\"commission\":\"10.10000000\",\"commissionAsset\":\"BNB\",\"time\":1499865549590,\"isBuyer\":true,\"isMaker\":false,\"isBestMatch\":true}]");
+  vector<Trade> ts = j;
+  REQUIRE(ts.size() == 1);
+  REQUIRE(ts[0].id == 28457);
+  REQUIRE(ts[0].price == "4.00000100");
+  REQUIRE(ts[0].qty == "12.00000000");
+  REQUIRE(ts[0].commission == "10.10000000");
+  REQUIRE(ts[0].commission_asset == "BNB");
+  REQUIRE(ts[0].time == 1499865549590);
+  REQUIRE(ts[0].is_buyer == true);
+  REQUIRE(ts[0].is_maker == false);
+  REQUIRE(ts[0].is_best_match == true);
+}

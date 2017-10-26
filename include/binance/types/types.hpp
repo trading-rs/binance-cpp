@@ -10,3 +10,4 @@
 #include "new_order_response.hpp"
 #include "order.hpp"
 #include "cancel_order_response.hpp"
+#include "trade.hpp"
