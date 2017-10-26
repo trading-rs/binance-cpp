@@ -383,3 +383,14 @@ asset = ENG, free = 0.00000000, locked = 0.00000000
 asset = ZEC, free = 0.00000000, locked = 0.00000000
 </pre>
 </details>
+
+#### Get list of trades for an account and a symbol
+```C++
+endpoint->my_trades("LTCBTC") >>= print_results<Trade>;
+```
+<details>
+<summary>View Output</summary>
+<pre>
+id = 123, price = 0.00000100, qty = 1000.00000000, commission = 0.00172100, commissionAsset = LTC, time=1507927870561, buyer=false, maker=false, bestMatch=true, orderId = 11289
+</pre>
+</details>

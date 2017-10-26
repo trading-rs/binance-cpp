@@ -180,5 +180,19 @@ namespace binance {
                      result.can_withdraw) << endl;
       return Maybe<vector<Balance>>(result.balances) >>= print_results<Balance>;
     };
+    template <>
+    function<Maybe<json>(Trade)> print_result<Trade> = [](const auto &result) {
+      cout << format("id = {0}, price = {1}, qty = {2}, commission = {3}, commissionAsset = {4}, time = {5}, isBuyer = {6}, isMaker = {7}, isBestMatch = {8}",
+                     result.id,
+                     result.price,
+                     result.qty,
+                     result.commission,
+                     result.commission_asset,
+                     result.time,
+                     result.is_buyer,
+                     result.is_maker,
+                     result.is_best_match) << endl;
+      return Nothing<json>;
+    };
   }
 }

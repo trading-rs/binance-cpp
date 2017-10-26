@@ -122,8 +122,8 @@ namespace binance {
          fromId: TradeId to fetch from. Default gets most recent trades
          limit: Default 500; max 500
       */
-      auto my_trades(string symbol, const Map &options) -> Maybe<json>;
-      auto my_trades(string symbol) -> Maybe<json>;
+      auto my_trades(string symbol, const Map &options) -> Maybe<vector<Trade>>;
+      auto my_trades(string symbol) -> Maybe<vector<Trade>>;
       auto start_user_data_stream() -> Maybe<json>;
       auto keepalive_user_data_stream(string listen_key) -> Maybe<json>;
       auto close_user_data_stream(string listen_key) -> Maybe<json>;
@@ -280,13 +280,13 @@ namespace binance {
       return this->api->signed_get("/api/v3/account", Map({})) >>= get_data<Account>;
     }
 
-    auto Endpoint::my_trades(string symbol, const Map &options) -> Maybe<json> {
+    auto Endpoint::my_trades(string symbol, const Map &options) -> Maybe<vector<Trade>> {
       Map params = options;
       params["symbol"] = symbol;
-      return this->api->signed_get("/api/v3/myTrades", params);
+      return this->api->signed_get("/api/v3/myTrades", params) >>= get_datas<Trade>;
     }
 
-    auto Endpoint::my_trades(string symbol) -> Maybe<json> {
+    auto Endpoint::my_trades(string symbol) -> Maybe<vector<Trade>> {
       return this->my_trades(symbol, Map({}));
     }
 
