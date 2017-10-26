@@ -32,4 +32,4 @@ export BINANCE_API_SECRET="<secret_key>"
 
 ### Documentation
 
-![API DOC](./doc.md)
+![API DOCUMENTATION](./DOCUMENT.md)
