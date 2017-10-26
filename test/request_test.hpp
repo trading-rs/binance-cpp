@@ -48,6 +48,6 @@ TEST_CASE("Test Binance account endpoints") {
 
   auto jr = endpoint->start_user_data_stream();
   REQUIRE(jr.isJust());
-  REQUIRE(endpoint->keepalive_user_data_stream(jr.fromJust()["listenKey"]).isJust());
-  REQUIRE(endpoint->close_user_data_stream(jr.fromJust()["listenKey"]).isJust());
+  REQUIRE(endpoint->keepalive_user_data_stream(jr.fromJust()).isJust());
+  REQUIRE(endpoint->close_user_data_stream(jr.fromJust()).isJust());
 }

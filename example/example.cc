@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     });
   auto jr = endpoint->start_user_data_stream();
   if (jr.isJust()) {
-    auto listen_key = jr.fromJust()["listenKey"];
+    auto listen_key = jr.fromJust();
     endpoint->user_data_websockets(listen_key, [](json data) {
         cout << data.dump(2) << endl;
       });

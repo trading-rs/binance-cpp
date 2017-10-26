@@ -51,14 +51,17 @@ namespace binance {
       }
     };
 
-    function<Maybe<long>(json)> get_server_time = [](const auto &j) {
-      auto st = j["serverTime"];
-      if (st != nullptr) {
-        return Maybe<long>(st.template get<long>());
-      } else {
-        logger->error("{0} does not contain `serverTime` property!", j.dump());
-        return Nothing<long>;
-      }
+    template <typename T>
+    function<function<Maybe<T>(json)>(string)> get_by_field = [](const string &field) {
+      return [=](const auto &j) {
+        auto st = j[field];
+        if (st != nullptr) {
+          return Maybe<T>(st.template get<T>());
+        } else {
+          logger->error("{0} does not contain `{1}` property!", j.dump(), field);
+          return Nothing<T>;
+        }
+      };
     };
 
     class Endpoint {
@@ -124,7 +127,7 @@ namespace binance {
       */
       auto my_trades(string symbol, const Map &options) -> Maybe<vector<Trade>>;
       auto my_trades(string symbol) -> Maybe<vector<Trade>>;
-      auto start_user_data_stream() -> Maybe<json>;
+      auto start_user_data_stream() -> Maybe<string>;
       auto keepalive_user_data_stream(string listen_key) -> Maybe<json>;
       auto close_user_data_stream(string listen_key) -> Maybe<json>;
       auto depth_websocket(string symbol, async_callback callback) -> void;
@@ -142,7 +145,7 @@ namespace binance {
     }
 
     auto Endpoint::time() -> Maybe<long> {
-      return this->api->public_get("/api/v1/time") >>= get_server_time;
+      return this->api->public_get("/api/v1/time") >>= get_by_field<long>("serverTime");
     }
 
     auto Endpoint::order_book(string symbol, const Map &options) -> Maybe<OrderBook> {
@@ -290,8 +293,8 @@ namespace binance {
       return this->my_trades(symbol, Map({}));
     }
 
-    auto Endpoint::start_user_data_stream() -> Maybe<json> {
-      return this->api->user_post("/api/v1/userDataStream", Map({}));
+    auto Endpoint::start_user_data_stream() -> Maybe<string> {
+      return this->api->user_post("/api/v1/userDataStream", Map({})) >>= get_by_field<string>("listenKey");
     }
 
     auto Endpoint::keepalive_user_data_stream(string listen_key) -> Maybe<json> {
