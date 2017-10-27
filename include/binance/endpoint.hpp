@@ -127,6 +127,12 @@ namespace binance {
       */
       auto my_trades(string symbol, const Map &options) -> Maybe<vector<Trade>>;
       auto my_trades(string symbol) -> Maybe<vector<Trade>>;
+      auto withdraw(string asset, string address, double amount, const Map &options) -> Maybe<json>;
+      auto withdraw(string asset, string address, double amount) -> Maybe<json>;
+      auto withdraw_history(const Map &options) -> Maybe<WithdrawHistory>;
+      auto withdraw_history(string asset) -> Maybe<WithdrawHistory>;
+      auto deposit_history(const Map &options) -> Maybe<DepositHistory>;
+      auto deposit_history(string asset) -> Maybe<DepositHistory>;
       auto start_user_data_stream() -> Maybe<string>;
       auto keepalive_user_data_stream(string listen_key) -> Maybe<json>;
       auto close_user_data_stream(string listen_key) -> Maybe<json>;
@@ -291,6 +297,34 @@ namespace binance {
 
     auto Endpoint::my_trades(string symbol) -> Maybe<vector<Trade>> {
       return this->my_trades(symbol, Map({}));
+    }
+
+    auto Endpoint::withdraw(string asset, string address, double amount, const Map &options) -> Maybe<json> {
+      Map params = options;
+      params["asset"] = asset;
+      params["address"] = address;
+      params["amount"] = format("{}", amount);
+      return this->api->signed_post("/wapi/v1/withdraw.html", params);
+    }
+
+    auto Endpoint::withdraw(string asset, string address, double amount) -> Maybe<json> {
+      return this->withdraw(asset, address, amount, Map({}));
+    }
+
+    auto Endpoint::withdraw_history(const Map &options) -> Maybe<WithdrawHistory> {
+      return this->api->signed_post("/wapi/v1/getWithdrawHistory.html", options) >>= get_data<WithdrawHistory>;
+    }
+
+    auto Endpoint::withdraw_history(string asset) -> Maybe<WithdrawHistory> {
+      return this->withdraw_history(Map({{ "asset", asset }}));
+    }
+
+    auto Endpoint::deposit_history(const Map &options) -> Maybe<DepositHistory> {
+      return this->api->signed_post("/wapi/v1/getDepositHistory.html", options) >>= get_data<DepositHistory>;
+    }
+
+    auto Endpoint::deposit_history(string asset) -> Maybe<DepositHistory> {
+      return this->deposit_history(Map({{ "asset", asset }}));
     }
 
     auto Endpoint::start_user_data_stream() -> Maybe<string> {

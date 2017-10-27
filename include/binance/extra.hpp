@@ -245,5 +245,38 @@ namespace binance {
                      result.is_buyer_maker) << endl;
       return Nothing<json>;
     };
+    template <>
+    function<Maybe<json>(Withdraw)> print_result<Withdraw> = [](const auto &result) {
+      cout << format("amount = {0}, address = {1}, asset = {2}, applyTime = {3}, successTime = {4}, txId = {5}, status = {6}",
+                     result.amount,
+                     result.address,
+                     result.asset,
+                     result.apply_time,
+                     result.success_time,
+                     result.tx_id,
+                     result.status) << endl;
+      return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(WithdrawHistory)> print_result<WithdrawHistory> = [](const auto &result) {
+      Maybe<vector<Withdraw>>(result.withdraws) >>= print_results<Withdraw>;
+      cout << format("success = {}", result.success) << endl;
+      return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(Deposit)> print_result<Deposit> = [](const auto &result) {
+      cout << format("insertTime = {0}, amount = {1}, asset = {2}, status = {3}",
+                     result.insert_time,
+                     result.amount,
+                     result.asset,
+                     result.status) << endl;
+      return Nothing<json>;
+    };
+    template <>
+    function<Maybe<json>(DepositHistory)> print_result<DepositHistory> = [](const auto &result) {
+      Maybe<vector<Deposit>>(result.deposits) >>= print_results<Deposit>;
+      cout << format("success = {}", result.success) << endl;
+      return Nothing<json>;
+    };
   }
 }

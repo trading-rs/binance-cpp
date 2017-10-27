@@ -395,6 +395,25 @@ id = 123, price = 0.00000100, qty = 1000.00000000, commission = 0.00172100, comm
 </pre>
 </details>
 
+#### Withdraw
+
+In order to be able to withdraw programatically, please enable the `Enable Withdrawals` option in the API settings.
+
+```C++
+endpoint->withdraw("ETH", "Ox333", 3.3) >>= print_result<json>;
+```
+
+#### Fetch withdraw history
+
+```C++
+endpoint->withdraw_history("NEO") >>= print_result<WithdrawHistory>;
+```
+
+#### Fetch deposit history
+```C++
+endpoint->deposit_history("NEO") >>= print_result<DepositHistory>;
+```
+
 ### WebSocket API
 
 #### Listen for changes in the order book for ETH/BTC

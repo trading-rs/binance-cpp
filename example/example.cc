@@ -57,6 +57,10 @@ int main(int argc, char** argv) {
 
   endpoint->my_trades("LTCBTC") >>= print_results<Trade>;
 
+  endpoint->withdraw("ETH", "Ox333", 3.3) >>= print_result<json>;
+  endpoint->withdraw_history("NEO") >>= print_result<WithdrawHistory>;
+  endpoint->deposit_history("NEO") >>= print_result<DepositHistory>;
+
   endpoint->depth_websocket("ethbtc",  [](json data) {
       DepthEvent de = data;
       print_result<DepthEvent>(de);

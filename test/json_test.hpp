@@ -219,3 +219,24 @@ TEST_CASE("Test deserialization for AggTradeEvent") {
   REQUIRE(ate.trade_time == 1499405254324);
   REQUIRE(ate.is_buyer_maker == false);
 }
+
+TEST_CASE("Test deserialization for WithdrawHistory") {
+  json j = json::parse("{\"withdrawList\":[{\"amount\":1,\"address\":\"0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b\",\"asset\":\"ETH\",\"applyTime\":1508198532000,\"status\":4},{\"amount\":0.005,\"address\":\"0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b\",\"txId\":\"0x80aaabed54bdab3f6de5868f89929a2371ad21d666f20f7393d1a3389fad95a1\",\"asset\":\"ETH\",\"applyTime\":1508198532000,\"status\":4}],\"success\":true}");
+  WithdrawHistory wh = j;
+  vector<Withdraw> withdraws_expected = {
+    Withdraw({ 1, "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b", "ETH", 1508198532000, 0, "", 4 }),
+    Withdraw({ 0.005, "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b", "ETH", 1508198532000, 0, "0x80aaabed54bdab3f6de5868f89929a2371ad21d666f20f7393d1a3389fad95a1", 4 })
+  };
+  REQUIRE(wh.withdraws == withdraws_expected);
+  REQUIRE(wh.success == true);
+}
+
+TEST_CASE("Test deserialization for DepositHistory") {
+  json j = json::parse("{\"depositList\":[{\"insertTime\":1508198532000,\"amount\":0.04670582,\"asset\":\"ETH\",\"status\":1}],\"success\":true}");
+  DepositHistory dh = j;
+  vector<Deposit> deposits_expected = {
+    Deposit({ 1508198532000, 0.04670582, "ETH", 1 })
+  };
+  REQUIRE(dh.deposits == deposits_expected);
+  REQUIRE(dh.success == true);
+}
