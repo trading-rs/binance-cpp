@@ -13,3 +13,4 @@
 #include "trade.hpp"
 #include "depth_event.hpp"
 #include "candle_stick_event.hpp"
+#include "agg_trade_event.hpp"

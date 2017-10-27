@@ -1,8 +1,5 @@
 #pragma once
 
-#include "order_book.hpp"
-using namespace binance::types;
-
 #ifndef FORMAT_HEADER
 #define FORMAT_HEADER
 #include <fmt/format.h>

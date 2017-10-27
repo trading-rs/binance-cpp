@@ -204,3 +204,18 @@ TEST_CASE("Test deserialization for CandleStickEvent") {
   REQUIRE(cse.active_buy_volume == "2.34879839");
   REQUIRE(cse.quote_active_buy_volume == "0.24142166");
 }
+
+TEST_CASE("Test deserialization for AggTradeEvent") {
+  json j = json::parse("{\"e\":\"aggTrade\",\"E\":1499405254326,\"s\":\"ETHBTC\",\"a\":70232,\"p\":\"0.10281118\",\"q\":\"8.15632997\",\"f\":77489,\"l\":77489,\"T\":1499405254324,\"m\":false,\"M\":true}");
+  AggTradeEvent ate = j;
+  REQUIRE(ate.event_type == "aggTrade");
+  REQUIRE(ate.event_time == 1499405254326);
+  REQUIRE(ate.symbol == "ETHBTC");
+  REQUIRE(ate.trade_id == 70232);
+  REQUIRE(ate.price == "0.10281118");
+  REQUIRE(ate.qty == "8.15632997");
+  REQUIRE(ate.first_breakdown_trade_id == 77489);
+  REQUIRE(ate.last_breakdown_trade_id == 77489);
+  REQUIRE(ate.trade_time == 1499405254324);
+  REQUIRE(ate.is_buyer_maker == false);
+}

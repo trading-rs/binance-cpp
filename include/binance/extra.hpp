@@ -230,5 +230,20 @@ namespace binance {
                      result.quote_active_buy_volume) << endl;
       return Nothing<json>;
     };
+    template <>
+    function<Maybe<json>(AggTradeEvent)> print_result<AggTradeEvent> = [](const auto &result) {
+      cout << format("eventType = {0}, eventTime = {1}, symbol = {2}, tradeId = {3}, price = {4}, quantity = {5}, firstTradeId = {6}, lastTradeId = {7}, tradeTime = {8}, isBuyerMaker = {9}",
+                     result.event_type,
+                     result.event_time,
+                     result.symbol,
+                     result.trade_id,
+                     result.price,
+                     result.qty,
+                     result.first_breakdown_trade_id,
+                     result.last_breakdown_trade_id,
+                     result.trade_time,
+                     result.is_buyer_maker) << endl;
+      return Nothing<json>;
+    };
   }
 }

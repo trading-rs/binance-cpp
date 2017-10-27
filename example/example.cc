@@ -66,7 +66,8 @@ int main(int argc, char** argv) {
       print_result<CandleStickEvent>(cse);
     });
   endpoint->trades_websocket("ethbtc", [](json data) {
-      cout << data.dump(2) << endl;
+      AggTradeEvent ate = data;
+      print_result<AggTradeEvent>(ate);
     });
   auto jr = endpoint->start_user_data_stream();
   if (jr.isJust()) {

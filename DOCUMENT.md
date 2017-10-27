@@ -458,3 +458,19 @@ eventType = kline, eventTime = 1509040201004, symbol = ETHBTC, openTime = 150904
 eventType = kline, eventTime = 1509040201004, symbol = ETHBTC, openTime = 1509040200000, closeTime = 1509040259999, intervar = 1m, firstTradeId = -1, lastTradeId = -1, open = 0.04963400, close = 0.04963400, high = 0.04963400, low = 0.04963400, volume = 0.00000000, numberOfTrades = 0, isBarFinal = false, quoteVolume = 0.00000000, volumeOfActiveBuy = 0.00000000, quoteVolumeOfActiveBuy = 0.00000000
 </pre>
 </details>
+
+#### Listen for aggregated trade events for ETH/BTC
+```C++
+endpoint->trades_websocket("ethbtc", [](json data) {
+    AggTradeEvent ate = data;
+    print_result<AggTradeEvent>(ate);
+  });
+```
+<details>
+<summary>View Response</summary>
+<pre>
+eventType = aggTrade, eventTime = 1509117723259, symbol = ETHBTC, tradeId = 2282099, price = 0.05111000, quantity = 0.89900000, firstTradeId = 2396336, lastTradeId = 2396336, tradeTime = 1509117723258, isBuyerMaker = false
+eventType = aggTrade, eventTime = 1509117724071, symbol = ETHBTC, tradeId = 2282100, price = 0.05111000, quantity = 0.21500000, firstTradeId = 2396337, lastTradeId = 2396337, tradeTime = 1509117724071, isBuyerMaker = false
+eventType = aggTrade, eventTime = 1509117724271, symbol = ETHBTC, tradeId = 2282101, price = 0.05111000, quantity = 1.42700000, firstTradeId = 2396338, lastTradeId = 2396338, tradeTime = 1509117724271, isBuyerMaker = false
+</pre>
+</details>
