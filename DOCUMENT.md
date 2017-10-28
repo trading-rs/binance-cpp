@@ -493,3 +493,15 @@ eventType = aggTrade, eventTime = 1509117724071, symbol = ETHBTC, tradeId = 2282
 eventType = aggTrade, eventTime = 1509117724271, symbol = ETHBTC, tradeId = 2282101, price = 0.05111000, quantity = 1.42700000, firstTradeId = 2396338, lastTradeId = 2396338, tradeTime = 1509117724271, isBuyerMaker = false
 </pre>
 </details>
+
+#### Listen for changes in the account
+
+```C++
+auto jr = endpoint->start_user_data_stream();
+if (jr.isJust()) {
+  auto listen_key = jr.fromJust();
+  endpoint->user_data_websockets(listen_key, [](json data) {
+      cout << data.dump(2) << endl;
+    });
+}
+```
