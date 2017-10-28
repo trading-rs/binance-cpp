@@ -38,6 +38,13 @@ export BINANCE_API_SECRET="<secret_key>"
 ./script/test.sh
 ```
 
+### Run Examples
+
+```
+./build/binance_example
+./build/depth_cache_example
+```
+
 ### Documentation
 
 ![API DOCUMENTATION](./DOCUMENT.md)
@@ -46,3 +53,7 @@ export BINANCE_API_SECRET="<secret_key>"
 
 * ![example.cc](./example/example.cc)
 * ![depth_cache_example.cc](./example/depth_cache_example.cc)
+
+### Use this project as library
+
+![binance-cpp-example](https://github.com/zjhmale/binance-cpp-example)
