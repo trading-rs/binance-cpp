@@ -38,3 +38,7 @@ export BINANCE_API_SECRET="<secret_key>"
 
 * ![example.cc](./example/example.cc)
 * ![depth_cache_example.cc](./example/depth_cache_example.cc)
+
+### Use this project as library
+
+![binance-cpp-example](https://github.com/zjhmale/binance-cpp-example)
