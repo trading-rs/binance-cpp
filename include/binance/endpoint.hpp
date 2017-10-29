@@ -304,7 +304,7 @@ namespace binance {
       params["asset"] = asset;
       params["address"] = address;
       params["amount"] = format("{}", amount);
-      return this->api->signed_post("/wapi/v1/withdraw.html", params);
+      return this->api->signed_postw("/wapi/v1/withdraw.html", params);
     }
 
     auto Endpoint::withdraw(string asset, string address, double amount) -> Maybe<json> {
@@ -312,7 +312,7 @@ namespace binance {
     }
 
     auto Endpoint::withdraw_history(const Map &options) -> Maybe<WithdrawHistory> {
-      return this->api->signed_post("/wapi/v1/getWithdrawHistory.html", options) >>= get_data<WithdrawHistory>;
+      return this->api->signed_postw("/wapi/v1/getWithdrawHistory.html", options) >>= get_data<WithdrawHistory>;
     }
 
     auto Endpoint::withdraw_history(string asset) -> Maybe<WithdrawHistory> {
@@ -320,7 +320,7 @@ namespace binance {
     }
 
     auto Endpoint::deposit_history(const Map &options) -> Maybe<DepositHistory> {
-      return this->api->signed_post("/wapi/v1/getDepositHistory.html", options) >>= get_data<DepositHistory>;
+      return this->api->signed_postw("/wapi/v1/getDepositHistory.html", options) >>= get_data<DepositHistory>;
     }
 
     auto Endpoint::deposit_history(string asset) -> Maybe<DepositHistory> {

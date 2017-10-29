@@ -43,6 +43,7 @@ namespace binance {
     enum class REQUEST_TYPE : size_t {
       GET,
       POST,
+      POSTW, // for wapi endpoints
       PUT,
       DELETE
     };
@@ -70,6 +71,8 @@ namespace binance {
       auto user_get(const string &url) -> Maybe<json>;
       auto signed_get(const string &url, const Map &params) -> Maybe<json>;
       auto signed_get(const string &url) -> Maybe<json>;
+      auto signed_postw(const string &url, const Map &params) -> Maybe<json>;
+      auto signed_postw(const string &url) -> Maybe<json>;
       auto public_post(const string &url, const Map &params) -> Maybe<json>;
       auto public_post(const string &url) -> Maybe<json>;
       auto user_post(const string &url, const Map &params) -> Maybe<json>;
@@ -106,11 +109,25 @@ namespace binance {
     }
 
     auto Api::flatten_params(const Map &params) -> string {
-      vector<string> params_vec = params
+      auto it = params.find("signature");
+      string signature("");
+      Map new_params = params;
+      if (it != params.end()) {
+        signature = params.at("signature");
+        new_params.erase("signature");
+      }
+      new_params.erase("signature");
+      vector<string> params_vec = new_params
         | ranges::view::transform([](const auto &pair) {
             return format("{0}={1}", pair.first, pair.second);
           });
-      return params_vec | ranges::view::join('&');
+      string params_str = params_vec | ranges::view::join('&');
+      if (signature.empty()) {
+        return params_str;
+      } else {
+        // for wapi endpoints, signature always has to be the last request parameter
+        return format("{0}&signature={1}", params_str, signature);
+      }
     }
 
     auto Api::append_params(const string &url, const Map &params) -> string {
@@ -144,7 +161,7 @@ namespace binance {
       milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
       Map new_params = params;
       new_params["timestamp"] = to_string(ms.count());
-      new_params["recvWindow"] = "6000";
+      new_params["recvWindow"] = "6000000";
       auto params_str = flatten_params(new_params);
       auto signature = hmac<sha256>::calc_hex(params_str, this->api_secret);
       new_params["signature"] = signature;
@@ -177,6 +194,12 @@ namespace binance {
         session.SetPayload(params_to_payload(params));
         response = session.Post();
         method_str = "POST";
+        break;
+      }
+      case REQUEST_TYPE::POSTW: {
+        session.SetPayload(Payload{});
+        response = session.Post();
+        method_str = "POSTW";
         break;
       }
       case REQUEST_TYPE::PUT: {
@@ -220,6 +243,14 @@ namespace binance {
 
     auto Api::signed_get(const string &url) -> Maybe<json> {
       return signed_get(url, Map({}));
+    }
+
+    auto Api::signed_postw(const string &url, const Map &params) -> Maybe<json> {
+      return request(REQUEST_TYPE::POSTW, append_params(url, add_signature(params)), user_header, Map({}));
+    }
+
+    auto Api::signed_postw(const string &url) -> Maybe<json> {
+      return signed_postw(url, Map({}));
     }
 
     auto Api::public_post(const string &url, const Map &params) -> Maybe<json> {
