@@ -46,8 +46,10 @@ if(WIN32)
 endif()
 
 set(BUILD_CPR_TESTS OFF CACHE BOOL "Don't build cpr tests")
-set(BUILD_FP_EXEC OFF CACHE BOOL "Set to ON to build fp exec.")
-set(BUILD_FP_TESTS OFF CACHE BOOL "Set to ON to build fp tests.")
+set(BUILD_FP_EXEC OFF CACHE BOOL "Don't build fp exec")
+set(BUILD_FP_TESTS OFF CACHE BOOL "Don't build fp tests")
+set(BUILD_DERIVEJSON_EXEC OFF CACHE BOOL "Don't build derivejson exec")
+set(BUILD_DERIVEJSON_TESTS OFF CACHE BOOL "Don't build derivejson tests")
 
 find_package(CURL)
 if(CURL_FOUND)

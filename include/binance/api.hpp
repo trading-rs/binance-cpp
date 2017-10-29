@@ -66,27 +66,27 @@ namespace binance {
       auto request(REQUEST_TYPE method, const string &url, const Header &header, const Map &params) -> Maybe<json>;
       auto public_get(const string &url, const Map &params) -> Maybe<json>;
       auto public_get(const string &url) -> Maybe<json>;
-      auto user_get(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_get(const string &url, const Map &params) -> Maybe<json>;
       auto user_get(const string &url) -> Maybe<json>;
-      auto signed_get(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_get(const string &url, const Map &params) -> Maybe<json>;
       auto signed_get(const string &url) -> Maybe<json>;
       auto public_post(const string &url, const Map &params) -> Maybe<json>;
       auto public_post(const string &url) -> Maybe<json>;
-      auto user_post(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_post(const string &url, const Map &params) -> Maybe<json>;
       auto user_post(const string &url) -> Maybe<json>;
-      auto signed_post(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_post(const string &url, const Map &params) -> Maybe<json>;
       auto signed_post(const string &url) -> Maybe<json>;
       auto public_put(const string &url, const Map &params) -> Maybe<json>;
       auto public_put(const string &url) -> Maybe<json>;
-      auto user_put(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_put(const string &url, const Map &params) -> Maybe<json>;
       auto user_put(const string &url) -> Maybe<json>;
-      auto signed_put(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_put(const string &url, const Map &params) -> Maybe<json>;
       auto signed_put(const string &url) -> Maybe<json>;
       auto public_delete(const string &url, const Map &params) -> Maybe<json>;
       auto public_delete(const string &url) -> Maybe<json>;
-      auto user_delete(const string &url, const  Map &params) -> Maybe<json>;
+      auto user_delete(const string &url, const Map &params) -> Maybe<json>;
       auto user_delete(const string &url) -> Maybe<json>;
-      auto signed_delete(const string &url, const  Map &params) -> Maybe<json>;
+      auto signed_delete(const string &url, const Map &params) -> Maybe<json>;
       auto signed_delete(const string &url) -> Maybe<json>;
     };
 
@@ -94,12 +94,12 @@ namespace binance {
       this->domain = "https://www.binance.com";
       this->public_header = {
         { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
-        { "accept", "application/json" },
+        { "Accept", "application/json" },
         { "Content-Type", "application/x-www-form-urlencoded" }
       };
       this->user_header = {
         { "User-Agent", "Mozilla/4.0 (compatible; Node Binance API)" },
-        { "accept", "application/json" },
+        { "Accept", "application/json" },
         { "Content-Type", "application/x-www-form-urlencoded" },
         { "X-MBX-APIKEY", format("{}", this->api_key) }
       };
@@ -206,7 +206,7 @@ namespace binance {
       return public_get(url, Map({}));
     }
 
-    auto Api::user_get(const string &url, const  Map &params) -> Maybe<json> {
+    auto Api::user_get(const string &url, const Map &params) -> Maybe<json> {
       return request(REQUEST_TYPE::GET, append_params(url, params), user_header, Map({}));
     }
 
