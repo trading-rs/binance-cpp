@@ -8,7 +8,7 @@ using json = nlohmann::json;
 using namespace std;
 
 namespace binance {
-  namespace types {
+  namespace models {
     struct AggTrade {
       long aggregate_trade_id;
       string price;

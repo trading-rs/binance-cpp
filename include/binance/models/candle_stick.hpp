@@ -8,7 +8,7 @@ using json = nlohmann::json;
 using namespace std;
 
 namespace binance {
-  namespace types {
+  namespace models {
     struct CandleStick {
       long open_time;
       string open;

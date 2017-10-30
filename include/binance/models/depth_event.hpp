@@ -1,7 +1,7 @@
 #pragma once
 
 #include "order_book.hpp"
-using namespace binance::types;
+using namespace binance::models;
 
 #ifndef FORMAT_HEADER
 #define FORMAT_HEADER
@@ -18,7 +18,7 @@ using json = nlohmann::json;
 using namespace std;
 
 namespace binance {
-  namespace types {
+  namespace models {
     struct DepthEvent {
       string event_type;
       long event_time;

@@ -1,6 +1,6 @@
 #include <binance/binance.hpp>
 using namespace binance::endpoint;
-using namespace binance::websocket_client;
+using namespace binance::websocket::client;
 using namespace binance::extra;
 
 #include <spdlog/spdlog.h>

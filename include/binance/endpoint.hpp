@@ -3,11 +3,11 @@
 #include "api.hpp"
 using namespace binance::api;
 
-#include "websocket_client.hpp"
-using namespace binance::websocket_client;
+#include "websocket/client.hpp"
+using namespace binance::websocket::client;
 
-#include "types/types.hpp"
-using namespace binance::types;
+#include "models/models.hpp"
+using namespace binance::models;
 
 #ifndef FORMAT_HEADER
 #define FORMAT_HEADER

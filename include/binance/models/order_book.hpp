@@ -15,7 +15,7 @@ using json = nlohmann::json;
 using namespace std;
 
 namespace binance {
-  namespace types {
+  namespace models {
     struct OrderBookEntry {
       string price;
       string qty; // quantity

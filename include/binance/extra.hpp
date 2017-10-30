@@ -1,7 +1,7 @@
 #pragma once
 
-#include "types/types.hpp"
-using namespace binance::types;
+#include "models/models.hpp"
+using namespace binance::models;
 
 #include <json.hpp>
 using json = nlohmann::json;

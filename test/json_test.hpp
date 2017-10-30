@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
 #include <binance/binance.hpp>
-using namespace binance::types;
+using namespace binance::models;
 
 TEST_CASE("Test deserialization for OrderBook") {
   json j = json::parse("{\"lastUpdateId\":1027024,\"bids\":[[\"4.00000000\",\"431.00000000\",[]]],\"asks\":[[\"4.00000200\",\"12.00000000\",[]]]}");

@@ -6,7 +6,7 @@
 
 * Easy to use C++ APIs.
 * Fully armed with C++11/14 standards.
-* Abstraction of all the response data types.
+* Abstraction of all the response data models.
 * Implementation of all the up-to-date endpoints.
 * Detailed examples to demonstrate how to use this library.
 

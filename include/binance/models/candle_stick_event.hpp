@@ -15,7 +15,7 @@ using json = nlohmann::json;
 using namespace std;
 
 namespace binance {
-  namespace types {
+  namespace models {
     struct CandleStickEvent {
       string event_type;
       long event_time;
