@@ -1,5 +1,7 @@
 #pragma once
 
+#include <derivejson/derivejson.hpp>
+
 #include <json.hpp>
 using json = nlohmann::json;
 
@@ -9,14 +11,8 @@ using namespace std;
 
 namespace binance {
   namespace models {
-    struct TickerPrice {
-      string symbol;
-      string price;
-    };
-
-    void from_json(const json& j, TickerPrice& t) {
-      t.symbol = j.at("symbol").get<string>();
-      t.price = j.at("price").get<string>();
-    }
+    DEFINE_MODEL(TickerPrice,
+                 (string, symbol, "symbol")
+                 (string, price, "price"))
   }
 }

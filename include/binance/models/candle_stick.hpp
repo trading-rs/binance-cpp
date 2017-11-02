@@ -1,5 +1,7 @@
 #pragma once
 
+#include <derivejson/derivejson.hpp>
+
 #include <json.hpp>
 using json = nlohmann::json;
 
@@ -9,32 +11,17 @@ using namespace std;
 
 namespace binance {
   namespace models {
-    struct CandleStick {
-      long open_time;
-      string open;
-      string high;
-      string low;
-      string close;
-      string volumn;
-      long close_time;
-      string quote_asset_volume;
-      long number_of_trades;
-      string taker_buy_base_asset_volume;
-      string taker_buy_quote_asset_volume;
-    };
-
-    void from_json(const json& j, CandleStick& c) {
-      c.open_time = j.at(0).get<long>();
-      c.open = j.at(1).get<string>();
-      c.high = j.at(2).get<string>();
-      c.low = j.at(3).get<string>();
-      c.close = j.at(4).get<string>();
-      c.volumn = j.at(5).get<string>();
-      c.close_time = j.at(6).get<long>();
-      c.quote_asset_volume = j.at(7).get<string>();
-      c.number_of_trades = j.at(8).get<long>();
-      c.taker_buy_base_asset_volume = j.at(9).get<string>();
-      c.taker_buy_quote_asset_volume = j.at(10).get<string>();
-    }
+    DEFINE_MODEL(CandleStick,
+                 (long, open_time, 0)
+                 (string, open, 1)
+                 (string, high, 2)
+                 (string, low, 3)
+                 (string, close, 4)
+                 (string, volumn, 5)
+                 (long, close_time, 6)
+                 (string, quote_asset_volume, 7)
+                 (long, number_of_trades, 8)
+                 (string, taker_buy_base_asset_volume, 9)
+                 (string, taker_buy_quote_asset_volume, 10))
   }
 }

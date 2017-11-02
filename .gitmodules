@@ -31,3 +31,6 @@
 [submodule "libs/fp"]
 	path = libs/fp
 	url = https://github.com/zjhmale/functional-cpp.git
+[submodule "libs/derivejson"]
+	path = libs/derivejson
+	url = https://github.com/zjhmale/derive-json-cpp.git

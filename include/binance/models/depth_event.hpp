@@ -1,5 +1,7 @@
 #pragma once
 
+#include <derivejson/derivejson.hpp>
+
 #include "order_book.hpp"
 using namespace binance::models;
 
@@ -19,22 +21,12 @@ using namespace std;
 
 namespace binance {
   namespace models {
-    struct DepthEvent {
-      string event_type;
-      long event_time;
-      string symbol;
-      long update_id;
-      vector<OrderBookEntry> bids;
-      vector<OrderBookEntry> asks;
-    };
-
-    void from_json(const json& j, DepthEvent& o) {
-      o.event_type = j.at("e").get<string>();
-      o.event_time = j.at("E").get<long>();
-      o.symbol = j.at("s").get<string>();
-      o.update_id = j.at("u").get<long>();
-      o.bids = j.at("b").get<vector<OrderBookEntry>>();
-      o.asks = j.at("a").get<vector<OrderBookEntry>>();
-    }
+    DEFINE_MODEL_FROM_JSON(DepthEvent,
+                           (string, event_type, "e")
+                           (long, event_time, "E")
+                           (string, symbol, "s")
+                           (long, update_id, "u")
+                           (vector<OrderBookEntry>, bids, "b")
+                           (vector<OrderBookEntry>, asks, "a"))
   }
 }

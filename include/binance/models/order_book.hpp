@@ -1,5 +1,7 @@
 #pragma once
 
+#include <derivejson/derivejson.hpp>
+
 #ifndef FORMAT_HEADER
 #define FORMAT_HEADER
 #include <fmt/format.h>
@@ -34,16 +36,9 @@ namespace binance {
       return lhs.price == rhs.price && lhs.qty == rhs.qty;
     }
 
-    struct OrderBook {
-      long last_update_id;
-      vector<OrderBookEntry> bids;
-      vector<OrderBookEntry> asks;
-    };
-
-    void from_json(const json& j, OrderBook& o) {
-      o.last_update_id = j.at("lastUpdateId").get<long>();
-      o.bids = j.at("bids").get<vector<OrderBookEntry>>();
-      o.asks = j.at("asks").get<vector<OrderBookEntry>>();
-    }
+    DEFINE_MODEL_FROM_JSON(OrderBook,
+                           (long, last_update_id, "lastUpdateId")
+                           (vector<OrderBookEntry>, bids, "bids")
+                           (vector<OrderBookEntry>, asks, "asks"))
   }
 }

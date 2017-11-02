@@ -1,5 +1,7 @@
 #pragma once
 
+#include <derivejson/derivejson.hpp>
+
 #ifndef FORMAT_HEADER
 #define FORMAT_HEADER
 #include <fmt/format.h>
@@ -53,14 +55,8 @@ namespace binance {
         lhs.tx_id == rhs.tx_id;
     }
 
-    struct WithdrawHistory {
-      vector<Withdraw> withdraws;
-      bool success;
-    };
-
-    void from_json(const json& j, WithdrawHistory& o) {
-      o.withdraws = j.at("withdrawList").get<vector<Withdraw>>();
-      o.success = j.at("success").get<bool>();
-    }
+    DEFINE_MODEL_FROM_JSON(WithdrawHistory,
+                           (vector<Withdraw>, withdraws, "withdrawList")
+                           (bool, success, "success"))
   }
 }
