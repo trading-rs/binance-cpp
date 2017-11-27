@@ -82,6 +82,9 @@ cpr_option(BUILD_BINANCE_TESTS "Set to ON to build binance tests." ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++14")
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 if(BUILD_BINANCE_EXEC)
   add_executable(binance_example example/example.cc)
   target_link_libraries(
@@ -91,6 +94,7 @@ if(BUILD_BINANCE_EXEC)
     ${Boost_LIBRARIES}
     ${CPR_LIBRARIES}
     "-ldl"
+    Threads::Threads
     )
 
   add_executable(depth_cache_example example/depth_cache_example.cc)
@@ -101,6 +105,7 @@ if(BUILD_BINANCE_EXEC)
     ${Boost_LIBRARIES}
     ${CPR_LIBRARIES}
     "-ldl"
+    Threads::Threads
     )
 endif()
 
@@ -113,6 +118,7 @@ if(BUILD_BINANCE_TESTS)
     ${Boost_LIBRARIES}
     ${CPR_LIBRARIES}
     "-ldl"
+    Threads::Threads
     )
 
   enable_testing()
