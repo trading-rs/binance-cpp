@@ -4,5 +4,10 @@ set -x
 
 rm -rf build
 mkdir build && cd build
-cmake ..
+if [ "$RUNTIME" = "DOCKER" ]
+then
+    cmake -DNEEDCURL:BOOL=OFF ..
+else
+    cmake ..
+fi
 make

@@ -26,4 +26,5 @@ WORKDIR /app
 ADD . /app
 
 RUN ./script/pre-install.sh
-RUN ./script/build.sh
+RUN RUNTIME=DOCKER ./script/build.sh
+RUN ./script/test.sh

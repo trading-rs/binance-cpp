@@ -53,10 +53,15 @@ set(BUILD_FP_TESTS OFF CACHE BOOL "Don't build fp tests")
 set(BUILD_DERIVEJSON_EXEC OFF CACHE BOOL "Don't build derivejson exec")
 set(BUILD_DERIVEJSON_TESTS OFF CACHE BOOL "Don't build derivejson tests")
 
-find_package(CURL)
-if(CURL_FOUND)
+option(NEEDCURL "Need external curl?" ON)
+
+if(NEEDCURL)
+  find_package(CURL)
+  if(CURL_FOUND)
     set(USE_SYSTEM_CURL ON CACHE BOOL "Use the system curl for faster builds")
+  endif()
 endif()
+
 add_subdirectory(libs/cpr)
 add_subdirectory(libs/fp)
 
